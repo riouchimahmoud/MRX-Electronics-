@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX Electronics | Online Premium Tech</title>
+    <title>MRX STUDIO | Premium Hardware</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,36 +14,33 @@
             --neon-violet: #9d00ff;
             --text: #ffffff;
             --text-muted: #6b6b6b;
-            --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow: hidden; }
 
-        /* --- 1. MINIMAL LANDING PAGE --- */
+        /* --- LANDING --- */
         .landing {
             height: 100vh; width: 100vw;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: radial-gradient(circle at center, #0f101a 0%, #050505 100%);
             text-align: center;
         }
-        .hero-title { font-size: clamp(3rem, 12vw, 8rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; }
+        .hero-title { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; }
         .neon { background: linear-gradient(to right, var(--neon-blue), var(--neon-violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { color: var(--text-muted); letter-spacing: 10px; text-transform: uppercase; font-size: 0.8rem; margin-top: 20px; }
+        .tagline { color: var(--text-muted); letter-spacing: 10px; text-transform: uppercase; font-size: 0.7rem; margin-top: 20px; }
 
-        /* --- 2. THE TRIGGER (BOTTOM RIGHT) --- */
+        /* --- TRIGGER --- */
         .shop-trigger {
             position: fixed; bottom: 40px; right: 40px; z-index: 2000;
             cursor: pointer; background: var(--royal-blue); padding: 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(28, 63, 170, 0.4);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 15px; transition: 0.4s;
         }
-        .shop-trigger:hover { transform: scale(1.1) rotate(5deg); background: var(--neon-blue); }
         .slash-wrap { display: flex; flex-direction: column; gap: 6px; }
-        .slash { width: 30px; height: 3px; background: white; border-radius: 10px; transition: 0.4s; }
+        .slash { width: 30px; height: 3px; background: white; border-radius: 10px; }
 
-        /* --- 3. THE HIDDEN SHOP SIDEBAR --- */
+        /* --- SIDEBAR & FILTER --- */
         .sidebar {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
             background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(30px);
@@ -52,80 +49,48 @@
         }
         .sidebar.active { right: 0; }
 
-        /* Filter Panel (Left) */
         .filter-panel {
             background: var(--panel); border-right: 1px solid var(--border);
-            padding: 60px 40px; display: flex; flex-direction: column; gap: 40px;
+            padding: 60px 40px; display: flex; flex-direction: column; gap: 30px;
             overflow-y: auto;
         }
-        .filter-title { font-size: 0.7rem; font-weight: 800; color: var(--royal-blue); text-transform: uppercase; letter-spacing: 2px; }
-        
-        .search-box {
-            width: 100%; background: var(--bg); border: 1px solid var(--border);
-            padding: 12px; border-radius: 8px; color: white; outline: none;
-        }
-        .search-box:focus { border-color: var(--neon-blue); }
-
-        .price-range { display: flex; flex-direction: column; gap: 10px; }
-        .price-input { width: 100%; accent-color: var(--neon-blue); }
-
         .cat-btn {
             width: 100%; text-align: left; padding: 12px; background: transparent;
             border: 1px solid var(--border); color: var(--text-muted);
-            border-radius: 8px; cursor: pointer; margin-bottom: 10px; transition: 0.3s;
+            border-radius: 8px; cursor: pointer; transition: 0.3s;
         }
         .cat-btn.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
 
-        /* Results Panel (Right) */
-        .results-panel { padding: 60px 5%; overflow-y: auto; position: relative; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-
-        /* Mobile Filter Toggle Button */
-        .mobile-filter-toggle {
-            display: none; width: 100%; padding: 15px; background: var(--royal-blue);
-            color: white; border: none; border-radius: 8px; font-weight: 700;
-            margin-bottom: 20px; cursor: pointer;
-        }
+        /* --- PRODUCT GRID --- */
+        .results-panel { padding: 40px 5%; overflow-y: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
         .card {
-            background: var(--panel); border: 1px solid var(--border); padding: 20px;
-            border-radius: 16px; transition: 0.3s; position: relative;
+            background: var(--panel); border: 1px solid var(--border); padding: 25px;
+            border-radius: 16px; transition: 0.3s;
         }
-        .card:hover { border-color: var(--neon-violet); transform: translateY(-5px); }
-        .card .badge { position: absolute; top: 15px; right: 15px; font-size: 0.6rem; color: var(--neon-blue); font-weight: 800; }
-        .card h3 { margin: 15px 0 5px 0; font-size: 1.1rem; }
-        .card .desc { color: var(--text-muted); font-size: 0.8rem; height: 40px; }
-        .card .price { font-size: 1.4rem; font-weight: 800; color: var(--text); margin: 15px 0; }
-        
+        .card:hover { border-color: var(--neon-blue); transform: translateY(-5px); }
+        .card h3 { font-size: 1.2rem; margin-bottom: 15px; color: var(--neon-blue); }
+        .card .specs { font-size: 0.85rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; }
+        .card .price { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
+
         .buy-btn {
             display: block; width: 100%; text-align: center; padding: 12px;
             background: #25d366; color: white; text-decoration: none;
             border-radius: 8px; font-weight: 700; font-size: 0.8rem;
         }
 
-        /* --- SOCIAL HUB (BOTTOM LEFT) --- */
-        .socials { position: fixed; bottom: 40px; left: 40px; z-index: 1001; display: flex; gap: 15px; }
-        .soc-link { 
-            width: 50px; height: 50px; background: var(--glass); border: 1px solid var(--border);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; color: white; font-weight: 800; font-size: 0.7rem; transition: 0.3s;
-        }
-        .soc-link:hover { border-color: var(--neon-blue); transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+        .mobile-filter-toggle { display: none; width: 100%; padding: 15px; background: var(--royal-blue); color: white; border: none; border-radius: 8px; font-weight: 700; margin-bottom: 20px; }
 
-        /* Animation States */
-        .active-icon .slash:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-        .active-icon .slash:nth-child(2) { opacity: 0; }
-        .active-icon .slash:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+        /* --- SOCIALS --- */
+        .socials { position: fixed; bottom: 40px; left: 40px; z-index: 1001; display: flex; gap: 15px; }
+        .soc-link { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-weight: 800; font-size: 0.7rem; }
 
         @media (max-width: 900px) {
             .sidebar { grid-template-columns: 1fr; }
-            .filter-panel { 
-                position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-                z-index: 10; display: none; /* Hidden by default on mobile */
-            }
+            .filter-panel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
             .filter-panel.mobile-show { display: flex; }
             .mobile-filter-toggle { display: block; }
-            .hero-title { font-size: 4rem; }
         }
     </style>
 </head>
@@ -133,72 +98,64 @@
 
     <div class="landing">
         <h1 class="hero-title">MRX<br><span class="neon">STUDIO</span></h1>
-        <p class="tagline">100% Online Hardware Excellence</p>
+        <p class="tagline">Tech Boutique 🇲🇦</p>
     </div>
 
     <div class="socials">
-        <a href="https://www.instagram.com/mrx_electronics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="soc-link">INSTA</a>
-        <a href="https://wa.me/212693672256" target="_blank" class="soc-link" style="color: #25d366;">WA</a>
+        <a href="https://www.instagram.com/mrx_electronics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="soc-link">INSTA</a>
+        <a href="https://wa.me/212693672256" class="soc-link" style="color:#25d366">WA</a>
     </div>
 
     <div class="shop-trigger" onclick="toggleShop()">
-        <div class="slash-wrap">
-            <div class="slash"></div>
-            <div class="slash"></div>
-            <div class="slash"></div>
-        </div>
+        <div class="slash-wrap"><div class="slash"></div><div class="slash"></div><div class="slash"></div></div>
     </div>
 
     <div class="sidebar" id="sidebar">
         <aside class="filter-panel" id="filterPanel">
-            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()" style="background: var(--neon-violet);">APPLY & CLOSE</button>
-            <div>
-                <span class="filter-title">Search Tech</span>
-                <input type="text" class="search-box" id="searchInp" placeholder="Type to find..." onkeyup="applyFilters()">
+            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()" style="background:var(--neon-violet)">APPLY FILTERS</button>
+            <span style="font-size:0.7rem; font-weight:800; color:var(--royal-blue); letter-spacing:2px">CATEGORIES</span>
+            <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px">
+                <button class="cat-btn active" onclick="setCategory('all', this)">All Stock</button>
+                <button class="cat-btn" onclick="setCategory('laptop', this)">Laptops</button>
+                <button class="cat-btn" onclick="setCategory('desktop', this)">Desktops</button>
+                <button class="cat-btn" onclick="setCategory('phone', this)">Phones</button>
             </div>
-
-            <div>
-                <span class="filter-title">Category</span>
-                <div style="margin-top:15px">
-                    <button class="cat-btn active" onclick="setCategory('all', this)">All Hardware</button>
-                    <button class="cat-btn" onclick="setCategory('laptop', this)">Laptops</button>
-                    <button class="cat-btn" onclick="setCategory('parts', this)">PC Components</button>
-                    <button class="cat-btn" onclick="setCategory('acc', this)">Accessories</button>
-                </div>
+            <div style="margin-top:30px">
+                <span style="font-size:0.7rem; font-weight:800; color:var(--royal-blue); letter-spacing:2px">PRICE MAX: <span id="priceVal" style="color:white">10,000</span> DH</span>
+                <input type="range" id="priceRange" min="1000" max="15000" step="100" value="15000" style="width:100%; margin-top:15px" oninput="applyFilters()">
             </div>
-
-            <div class="price-range">
-                <span class="filter-title">Max Price: <span id="priceVal" style="color:var(--neon-blue)">60,000</span> MAD</span>
-                <input type="range" class="price-input" id="priceRange" min="500" max="60000" step="500" value="60000" oninput="applyFilters()">
-            </div>
-            
-            <p style="font-size: 0.7rem; color: var(--text-muted);">* Nationwide Shipping 🇲🇦</p>
         </aside>
 
         <section class="results-panel">
-            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()">⚙️ FILTERS & SEARCH</button>
-            <h2 style="font-size: 2rem; margin-bottom: 30px;">Digital <span class="neon">Inventory</span></h2>
+            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()">⚙️ FILTER BY TYPE / PRICE</button>
+            <h2 style="font-size: 2rem; margin-bottom: 30px;">Premium <span class="neon">Inventory</span></h2>
             <div class="grid" id="productGrid"></div>
         </section>
     </div>
 
     <script>
         const products = [
-            { name: "MSI Titan GT77", cat: "laptop", price: 54900, desc: "i9-14900HX | 128GB RAM | RTX 4090" },
-            { name: "MacBook Pro M3 Max", cat: "laptop", price: 38500, desc: "16-core CPU | 40-core GPU" },
-            { name: "RTX 5090 Founders", cat: "parts", price: 29000, desc: "Next-Gen Architecture | 32GB" },
-            { name: "Ryzen 9 7950X3D", cat: "parts", price: 8200, desc: "Ultimate Gaming Processor" },
-            { name: "AirPods Pro 2", cat: "acc", price: 2700, desc: "USB-C | Active Noise Cancelling" },
-            { name: "Logitech MX Master 3S", cat: "acc", price: 1200, desc: "Wireless Productivity Mouse" },
-            { name: "Samsung 990 Pro 2TB", cat: "parts", price: 1950, desc: "7450MB/s NVMe SSD" },
-            { name: "Razer BlackWidow V4", cat: "acc", price: 2400, desc: "Mechanical Gaming Keyboard" }
+            // LAPTOPS
+            { name: "i5-1240P Laptop", cat: "laptop", price: 4250, specs: "Intel Core i5-1240P (12th Gen)<br>8GB RAM<br>512GB SSD Ultra Rapide" },
+            { name: "MacBook Air M1 13” (2020)", cat: "laptop", price: 5900, specs: "Puce Apple M1 (8 CPU / 7 GPU)<br>8GB RAM | 512GB SSD<br>Écran Retina True Tone<br>Batterie 12-15h (État Neuf)" },
+            { name: "Dell Precision 5570 (2022)", cat: "laptop", price: 6800, specs: "i7-12800H (14 Cores)<br>RTX A1000 4GB GDDR6<br>32GB RAM DDR5 | 1TB SSD<br>FHD+ 500 Nits 100% sRGB" },
+            { name: "ACER NITRO V15", cat: "laptop", price: 7800, specs: "i5-13420H (13th Gen)<br>32GB RAM Extreme<br>1TB SSD | RTX 3050Ti<br>15.6\" FHD IPS 165Hz" },
+            
+            // DESKTOPS
+            { name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, specs: "i5-9400KF Processor<br>RTX 3060 12GB GPU<br>16GB RAM | 512GB NVMe SSD" },
+            
+            // PHONES
+            { name: "iPhone 12", cat: "phone", price: 2600, specs: "64GB Storage<br>Premium Condition" },
+            { name: "iPhone 11 Pro Max", cat: "phone", price: 3100, specs: "256GB Storage<br>Excellent Condition" },
+            { name: "iPhone 14 Pro Max", cat: "phone", price: 9600, specs: "1TB Ultra Storage<br>Top Tier Condition" },
+            { name: "Samsung S20 FE", cat: "phone", price: 2000, specs: "128GB Storage<br>Smooth Performance" },
+            { name: "Samsung S22 Ultra", cat: "phone", price: 3600, specs: "Flagship Performance<br>Great Condition" }
         ];
 
         let currentCat = 'all';
 
         function toggleShop() {
             document.getElementById('sidebar').classList.toggle('active');
-            document.querySelector('.shop-trigger').classList.toggle('active-icon');
         }
 
         function toggleMobileFilter() {
@@ -213,34 +170,25 @@
         }
 
         function applyFilters() {
-            const searchVal = document.getElementById('searchInp').value.toLowerCase();
             const maxPrice = document.getElementById('priceRange').value;
             document.getElementById('priceVal').innerText = parseInt(maxPrice).toLocaleString();
-
+            
             const filtered = products.filter(p => {
-                const matchesSearch = p.name.toLowerCase().includes(searchVal);
                 const matchesCat = currentCat === 'all' || p.cat === currentCat;
                 const matchesPrice = p.price <= maxPrice;
-                return matchesSearch && matchesCat && matchesPrice;
+                return matchesCat && matchesPrice;
             });
-
             render(filtered);
         }
 
         function render(items) {
             const grid = document.getElementById('productGrid');
-            if(items.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted)">No items found...</p>`;
-                return;
-            }
-
             grid.innerHTML = items.map(p => `
                 <div class="card">
-                    <span class="badge">SHIPPING READY</span>
                     <h3>${p.name}</h3>
-                    <p class="desc">${p.desc}</p>
-                    <div class="price">${p.price.toLocaleString()} <span style="font-size:0.7rem; color:var(--text-muted)">MAD</span></div>
-                    <a href="https://wa.me/212693672256?text=Salam MRX, I am interested in the ${p.name}" class="buy-btn">WHATSAPP ORDER</a>
+                    <div class="specs">${p.specs}</div>
+                    <div class="price">${p.price.toLocaleString()} <span style="font-size:0.8rem; color:var(--neon-blue)">DH</span></div>
+                    <a href="https://wa.me/212693672256?text=Salam MRX, I want to order the ${p.name.replace(/\"/g, '')}" class="buy-btn">WHATSAPP ORDER</a>
                 </div>
             `).join('');
         }
