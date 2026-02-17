@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX ELECTRONICS | Ultimate Inventory</title>
+    <title>MRX ELECTRONICS | Premium Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --bg: #050505;
@@ -33,7 +34,7 @@
         .hero-title { font-size: clamp(3rem, 10vw, 7rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; text-align: center; }
         .neon { background: linear-gradient(to right, var(--neon-blue), var(--neon-violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* BIO GRID (Trust Section) */
+        /* BIO GRID */
         .bio-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px; width: 100%; max-width: 1000px; margin-top: 50px;
@@ -44,19 +45,29 @@
             padding: 20px; border-radius: 15px; text-align: center; transition: 0.3s;
         }
         .bio-item:hover { border-color: var(--neon-blue); background: rgba(28, 63, 170, 0.1); }
+        .bio-item i { font-size: 1.5rem; display: block; margin-bottom: 10px; }
         .bio-item h4 { font-size: 0.7rem; letter-spacing: 2px; color: var(--neon-blue); margin-bottom: 5px; text-transform: uppercase; }
         .bio-item p { font-size: 0.85rem; color: #888; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: rgba(5,5,5,0.98); backdrop-filter: blur(40px); z-index: 1500; transition: 0.7s cubic-bezier(0.85, 0, 0.15, 1); display: grid; grid-template-columns: 360px 1fr; }
+        /* --- SIDEBAR & SHOP --- */
+        .sidebar { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: rgba(5,5,5,0.98); backdrop-filter: blur(40px); z-index: 1500; transition: 0.5s cubic-bezier(0.85, 0, 0.15, 1); display: grid; grid-template-columns: 360px 1fr; }
         .sidebar.active { right: 0; }
-        .filter-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
+        
+        /* Filter Panel */
+        .filter-panel { 
+            background: var(--panel); border-right: 1px solid var(--border); 
+            padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; 
+            height: 100%;
+        }
 
         /* --- UI ELEMENTS --- */
         .tag-container { display: flex; flex-wrap: wrap; gap: 8px; }
         .tag { padding: 8px 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.7rem; cursor: pointer; color: #666; transition: 0.3s; }
         .tag.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
         
+        /* Mobile Toggle Btn (Hidden on Desktop) */
+        .mobile-filter-btn { display: none; width: 100%; padding: 15px; background: var(--royal-blue); border: none; color: white; font-weight: 800; border-radius: 8px; margin-bottom: 20px; cursor: pointer; }
+
         /* --- RESULTS --- */
         .results-panel { padding: 40px 5%; overflow-y: auto; position: relative; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -72,14 +83,25 @@
         .cta-main { background: var(--royal-blue); color: white; padding: 15px 40px; border-radius: 50px; font-weight: 800; border: none; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 30px rgba(28, 63, 170, 0.3); transition: 0.3s; }
         .cta-main:hover { transform: scale(1.05); background: var(--neon-blue); }
 
-        /* SOCIALS & WA */
         .socials { position: fixed; bottom: 40px; left: 40px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
         .soc-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-size: 1.2rem; border: 1px solid var(--border); transition: 0.3s; }
-        .soc-btn:hover { background: var(--royal-blue); border-color: var(--neon-blue); }
 
-        @media (max-width: 900px) { .sidebar { grid-template-columns: 1fr; } .filter-panel { display: none; } }
+        /* --- MOBILE FIXES --- */
+        @media (max-width: 900px) { 
+            .sidebar { grid-template-columns: 1fr; } 
+            /* Hide Filter Panel by default on mobile, show when active class is added */
+            .filter-panel { 
+                display: none; 
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 20;
+            }
+            .filter-panel.mobile-active { display: flex; }
+            
+            /* Show the toggle button */
+            .mobile-filter-btn { display: block; }
+            
+            .bio-grid { grid-template-columns: 1fr; }
+        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -113,15 +135,16 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <aside class="filter-panel">
+        
+        <aside class="filter-panel" id="filterPanel">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
                 <h2 style="font-weight:800; font-size:1.5rem">FILTERS</h2>
-                <span onclick="toggleShop()" style="cursor:pointer; font-size:1.5rem; color:#888">&times;</span>
+                <span onclick="toggleMobileFilters()" style="cursor:pointer; font-size:1.5rem; color:var(--royal-blue)">DONE &times;</span>
             </div>
             
-            <input type="text" id="mainSearch" class="tag" style="width:100%; color:white; padding:12px; background:#000; margin-bottom:15px" placeholder="Search (e.g. PS5, M1, RTX)..." onkeyup="applyFilters()">
+            <input type="text" id="mainSearch" class="tag" style="width:100%; color:white; padding:12px; background:#000; margin-bottom:15px" placeholder="Search (e.g. PS5, M1)..." onkeyup="applyFilters()">
 
-            <div class="filter-group" style="padding-bottom:20px; border-bottom:1px solid var(--border)">
+            <div class="filter-group">
                 <span style="font-size:0.6rem; letter-spacing:2px; color:var(--neon-blue)">PRICE MAX: <span id="priceLabel">15000</span> DH</span>
                 <input type="range" id="priceRange" min="500" max="15000" step="100" value="15000" style="width:100%; margin-top:10px" oninput="applyFilters()">
             </div>
@@ -171,17 +194,21 @@
                     </div>
                 </div>
             </div>
-
+            
             <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:var(--neon-violet); cursor:pointer; font-size:0.7rem; font-weight:800; text-align:left">RESET ALL FILTERS</button>
         </aside>
 
         <section class="results-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+                 <button class="mobile-filter-btn" onclick="toggleMobileFilters()">⚙️ FILTERS / SEARCH</button>
+                <span onclick="toggleShop()" style="cursor:pointer; font-size:2rem; margin-left:10px">&times;</span>
+            </div>
+           
             <div class="grid" id="productGrid"></div>
         </section>
     </div>
 
     <script>
-        // --- 100% COMPLETE INVENTORY ---
         const inventory = [
             // LAPTOPS
             { name: "i5-1240P Laptop", cat: "laptop", price: 4250, spec: "i5", details: "Intel Core i5-1240P (12th Gen)<br>8GB RAM | 512GB SSD" },
@@ -199,7 +226,7 @@
             { name: "Samsung S22 Ultra", cat: "phone", price: 3600, spec: "Flagship", details: "Dynamic AMOLED | S-Pen<br>12GB RAM" },
             { name: "Samsung S20 FE", cat: "phone", price: 2000, spec: "Eco", details: "128GB Storage<br>120Hz Screen" },
 
-            // CONSOLES (NEW ADDITIONS)
+            // CONSOLES
             { name: "PlayStation®5 SLIM", cat: "console", price: 5000, spec: "PlayStation", details: "Standard Édition | Presque Neuf<br>100% Verified" },
             { name: "ASUS ROG ALLY", cat: "console", price: 5500, spec: "Handheld", details: "512GB SSD | Z1 Extreme<br>Windows 11 Gaming" },
             { name: "Steam Deck", cat: "console", price: 4800, spec: "Handheld", details: "256GB NVMe SSD<br>Portable Gaming Powerhouse" },
@@ -216,14 +243,15 @@
             applyFilters();
         }
 
+        function toggleMobileFilters() {
+            document.getElementById('filterPanel').classList.toggle('mobile-active');
+        }
+
         function setCategory(cat, el) {
-            // Highlight Button
             document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
             if(el) el.classList.add('active');
-            
             activeCat = cat;
             
-            // Logic to Show/Hide Layers
             document.querySelectorAll('.dynamic-layer').forEach(l => l.style.display = 'none');
             
             if(cat === 'laptop' || cat === 'desktop') document.getElementById('pcLayer').style.display = 'block';
@@ -235,11 +263,8 @@
 
         function toggleTag(el, type, val) {
             el.classList.toggle('active');
-            if(activeTags.includes(val)) {
-                activeTags = activeTags.filter(t => t !== val);
-            } else {
-                activeTags.push(val);
-            }
+            if(activeTags.includes(val)) activeTags = activeTags.filter(t => t !== val);
+            else activeTags.push(val);
             applyFilters();
         }
 
@@ -252,9 +277,6 @@
                 const matchCat = activeCat === 'all' || p.cat === activeCat;
                 const matchPrice = p.price <= maxP;
                 const matchSearch = p.name.toLowerCase().includes(query) || p.details.toLowerCase().includes(query);
-                
-                // If tags are selected, product must match at least one (OR logic for tags)
-                // If no tags selected, match is true
                 const matchTags = activeTags.length === 0 || activeTags.some(tag => p.spec.includes(tag) || p.details.includes(tag));
 
                 return matchCat && matchPrice && matchSearch && matchTags;
@@ -275,7 +297,6 @@
             `).join('');
         }
 
-        // Init
         render(inventory);
     </script>
 </body>
