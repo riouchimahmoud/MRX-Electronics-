@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MRX ELECTRONICS | Premium Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -18,7 +18,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; width: 100%; }
 
         /* --- INTENSE NEON TITLE --- */
         .neon-title {
@@ -60,7 +60,7 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* --- LANDING PAGE --- */
-        .landing { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .landing { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
         
         .bio-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -73,8 +73,13 @@
         .bio-item h4 { font-size: 0.7rem; color: var(--neon-blue); letter-spacing: 2px; margin-bottom: 5px; }
         .bio-item p { font-size: 0.8rem; color: #888; }
 
-        /* --- SIDEBAR SHOP --- */
-        .sidebar { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: rgba(5,5,5,0.99); backdrop-filter: blur(50px); z-index: 1500; transition: 0.5s; display: grid; grid-template-columns: 360px 1fr; }
+        /* --- SIDEBAR SHOP (MOBILE OPTIMIZED) --- */
+        .sidebar { 
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100%; 
+            background: rgba(5,5,5,0.99); backdrop-filter: blur(50px); 
+            z-index: 1500; transition: 0.5s; display: grid; 
+            grid-template-columns: 360px 1fr; 
+        }
         .sidebar.active { right: 0; }
         
         .filter-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
@@ -83,8 +88,8 @@
         .tag.active { background: var(--royal-blue); color: #fff; border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
 
         /* --- PRODUCT GRID --- */
-        .results-panel { padding: 40px 5%; overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .results-panel { padding: 40px 5%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 20px; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
         .card:hover { border-color: var(--neon-violet); transform: translateY(-5px); }
         .price { font-size: 1.6rem; font-weight: 800; color: #fff; display: block; margin: 15px 0; }
@@ -96,7 +101,21 @@
         .socials { position: fixed; bottom: 30px; left: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
         .soc-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 1px solid var(--border); text-decoration: none; }
 
-        @media (max-width: 900px) { .sidebar { grid-template-columns: 1fr; } .filter-panel { display: none; } }
+        /* --- PHONE/TABLET FIXES --- */
+        @media (max-width: 900px) { 
+            .sidebar { grid-template-columns: 1fr; } 
+            .filter-panel { 
+                height: auto; 
+                padding: 20px; 
+                border-right: none; 
+                border-bottom: 1px solid var(--border);
+            } 
+            .results-panel { padding: 20px; }
+            .grid { grid-template-columns: 1fr; } /* Stack cards on very small screens */
+            .neon-title { font-size: 3rem; }
+            .socials { left: 15px; bottom: 15px; }
+            .soc-btn { width: 45px; height: 45px; }
+        }
     </style>
 </head>
 <body>
@@ -124,7 +143,7 @@
         <aside class="filter-panel">
             <div style="display:flex; justify-content:space-between; align-items:center">
                 <h2 style="font-weight:800; color:var(--neon-blue)">NAVIGATOR</h2>
-                <span onclick="toggleShop()" style="cursor:pointer; font-size:2rem">&times;</span>
+                <span onclick="toggleShop()" style="cursor:pointer; font-size:2.5rem; padding: 10px;">&times;</span>
             </div>
             <div class="filter-group">
                 <span style="font-size:0.6rem; color:var(--neon-blue); letter-spacing:2px">CATÉGORIES</span>
@@ -146,24 +165,17 @@
 
     <script>
         const inventory = [
-            // CONSOLES
             { name: "PlayStation®5 SLIM Standard", cat: "console", price: 5000, details: "Standard édition | Presque Neuf 💯/💯 👌🏻" },
             { name: "ASUS ROG ALLY 512Go", cat: "console", price: 5500, details: "Z1 Extreme | 512GB SSD | Handheld Power" },
             { name: "Steam Deck 256 Go", cat: "console", price: 4800, details: "Valve SteamOS | 256GB NVMe SSD" },
             { name: "Xbox Series S", cat: "console", price: 3000, details: "Next-Gen Digital | White Edition" },
             { name: "Nintendo Switch", cat: "console", price: 1800, details: "V2 Neon Edition | Handheld Mode" },
             { name: "XBOX® ONE S", cat: "console", price: 1400, details: "1TB Storage | 4K HDR Gaming" },
-            
-            // LAPTOPS
             { name: "ACER NITRO V15", cat: "laptop", price: 7800, details: "Core i5-13420H (13th Gen)\n32GB RAM Extreme\n1TB SSD\nRTX 3050Ti Graphics\n15.6\" FHD IPS 165Hz" },
             { name: "Dell Precision 5570 Station", cat: "laptop", price: 6800, details: "Core i7-12800H (14 Cores)\nRTX A1000 4GB GDDR6\n32 Go DDR5 RAM\n1 To SSD NVMe PCIe 4.0\n15.6” FHD+ 500 nits" },
             { name: "MacBook Air M1 13”", cat: "laptop", price: 5900, details: "Apple M1 Chip (8-Core)\n8GB RAM | 512GB SSD\nRetina Display True Tone\nSpace Gray / Gold / Silver" },
             { name: "Thinkpad L13 Gen 3", cat: "laptop", price: 4250, details: "Intel Core i5-1240P (12th Gen)\n8GB RAM | 512GB SSD\nUltra Fast Office & Pro" },
-            
-            // DESKTOP
             { name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, details: "Intel Core i5-9400KF\nNVIDIA RTX 3060 12GB\n16GB RAM\n512GB NVMe SSD" },
-            
-            // PHONES
             { name: "iPhone 14 Pro Max", cat: "phone", price: 9600, details: "1TB Storage | Deep Purple / Gold\nPremium State" },
             { name: "iPhone 11 Pro Max", cat: "phone", price: 3100, details: "256GB Storage | Triple Camera\nLegendary Battery" },
             { name: "iPhone 12", cat: "phone", price: 2600, details: "64GB Storage | 5G Ready\nSlim & Powerful" },
