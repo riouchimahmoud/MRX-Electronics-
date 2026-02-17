@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX STUDIO | Premium Hardware</title>
+    <title>MRX ELECTRONICS | Ultimate Inventory</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,187 +13,270 @@
             --neon-blue: #00d4ff;
             --neon-violet: #9d00ff;
             --text: #ffffff;
-            --text-muted: #6b6b6b;
             --border: rgba(255, 255, 255, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow: hidden; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* --- LANDING --- */
-        .landing {
-            height: 100vh; width: 100vw;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- LANDING HERO --- */
+        .landing { 
+            min-height: 100vh; width: 100vw; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
             background: radial-gradient(circle at center, #0f101a 0%, #050505 100%);
-            text-align: center;
+            padding: 20px; position: relative;
         }
-        .hero-title { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; }
+        
+        .hero-title { font-size: clamp(3rem, 10vw, 7rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; text-align: center; }
         .neon { background: linear-gradient(to right, var(--neon-blue), var(--neon-violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { color: var(--text-muted); letter-spacing: 10px; text-transform: uppercase; font-size: 0.7rem; margin-top: 20px; }
 
-        /* --- TRIGGER --- */
-        .shop-trigger {
-            position: fixed; bottom: 40px; right: 40px; z-index: 2000;
-            cursor: pointer; background: var(--royal-blue); padding: 20px;
-            border-radius: 15px; transition: 0.4s;
+        /* BIO GRID (Trust Section) */
+        .bio-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; width: 100%; max-width: 1000px; margin-top: 50px;
+            animation: fadeInUp 1s ease both; animation-delay: 0.5s;
         }
-        .slash-wrap { display: flex; flex-direction: column; gap: 6px; }
-        .slash { width: 30px; height: 3px; background: white; border-radius: 10px; }
+        .bio-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 20px; border-radius: 15px; text-align: center; transition: 0.3s;
+        }
+        .bio-item:hover { border-color: var(--neon-blue); background: rgba(28, 63, 170, 0.1); }
+        .bio-item h4 { font-size: 0.7rem; letter-spacing: 2px; color: var(--neon-blue); margin-bottom: 5px; text-transform: uppercase; }
+        .bio-item p { font-size: 0.85rem; color: #888; }
 
-        /* --- SIDEBAR & FILTER --- */
-        .sidebar {
-            position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(30px);
-            z-index: 1500; transition: 0.7s cubic-bezier(0.85, 0, 0.15, 1);
-            display: grid; grid-template-columns: 350px 1fr;
-        }
+        /* --- SIDEBAR --- */
+        .sidebar { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: rgba(5,5,5,0.98); backdrop-filter: blur(40px); z-index: 1500; transition: 0.7s cubic-bezier(0.85, 0, 0.15, 1); display: grid; grid-template-columns: 360px 1fr; }
         .sidebar.active { right: 0; }
+        .filter-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
 
-        .filter-panel {
-            background: var(--panel); border-right: 1px solid var(--border);
-            padding: 60px 40px; display: flex; flex-direction: column; gap: 30px;
-            overflow-y: auto;
-        }
-        .cat-btn {
-            width: 100%; text-align: left; padding: 12px; background: transparent;
-            border: 1px solid var(--border); color: var(--text-muted);
-            border-radius: 8px; cursor: pointer; transition: 0.3s;
-        }
-        .cat-btn.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
-
-        /* --- PRODUCT GRID --- */
-        .results-panel { padding: 40px 5%; overflow-y: auto; }
+        /* --- UI ELEMENTS --- */
+        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { padding: 8px 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.7rem; cursor: pointer; color: #666; transition: 0.3s; }
+        .tag.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
+        
+        /* --- RESULTS --- */
+        .results-panel { padding: 40px 5%; overflow-y: auto; position: relative; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 20px; animation: fadeInUp 0.5s backwards; }
+        .card:hover { transform: translateY(-5px); border-color: var(--neon-violet); }
+        .card .badge { font-size: 0.6rem; color: var(--neon-blue); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: white; }
+        .card .specs { font-size: 0.8rem; color: #888; line-height: 1.5; margin-bottom: 15px; min-height: 50px; }
+        .card .price { font-size: 1.6rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
 
-        .card {
-            background: var(--panel); border: 1px solid var(--border); padding: 25px;
-            border-radius: 16px; transition: 0.3s;
-        }
-        .card:hover { border-color: var(--neon-blue); transform: translateY(-5px); }
-        .card h3 { font-size: 1.2rem; margin-bottom: 15px; color: var(--neon-blue); }
-        .card .specs { font-size: 0.85rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; }
-        .card .price { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
+        /* --- BUTTONS --- */
+        .cta-main { background: var(--royal-blue); color: white; padding: 15px 40px; border-radius: 50px; font-weight: 800; border: none; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 30px rgba(28, 63, 170, 0.3); transition: 0.3s; }
+        .cta-main:hover { transform: scale(1.05); background: var(--neon-blue); }
 
-        .buy-btn {
-            display: block; width: 100%; text-align: center; padding: 12px;
-            background: #25d366; color: white; text-decoration: none;
-            border-radius: 8px; font-weight: 700; font-size: 0.8rem;
-        }
+        /* SOCIALS & WA */
+        .socials { position: fixed; bottom: 40px; left: 40px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
+        .soc-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-size: 1.2rem; border: 1px solid var(--border); transition: 0.3s; }
+        .soc-btn:hover { background: var(--royal-blue); border-color: var(--neon-blue); }
 
-        .mobile-filter-toggle { display: none; width: 100%; padding: 15px; background: var(--royal-blue); color: white; border: none; border-radius: 8px; font-weight: 700; margin-bottom: 20px; }
-
-        /* --- SOCIALS --- */
-        .socials { position: fixed; bottom: 40px; left: 40px; z-index: 1001; display: flex; gap: 15px; }
-        .soc-link { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-weight: 800; font-size: 0.7rem; }
-
-        @media (max-width: 900px) {
-            .sidebar { grid-template-columns: 1fr; }
-            .filter-panel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
-            .filter-panel.mobile-show { display: flex; }
-            .mobile-filter-toggle { display: block; }
-        }
+        @media (max-width: 900px) { .sidebar { grid-template-columns: 1fr; } .filter-panel { display: none; } }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="landing">
-        <h1 class="hero-title">MRX<br><span class="neon">STUDIO</span></h1>
-        <p class="tagline">Tech Boutique 🇲🇦</p>
-    </div>
-
     <div class="socials">
-        <a href="https://www.instagram.com/mrx_electronics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="soc-link">INSTA</a>
-        <a href="https://wa.me/212693672256" class="soc-link" style="color:#25d366">WA</a>
+        <a href="https://www.instagram.com/mrx_electronics" target="_blank" class="soc-btn"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/212693672256" target="_blank" class="soc-btn" style="color:#25d366"><i class="fab fa-whatsapp"></i></a>
     </div>
 
-    <div class="shop-trigger" onclick="toggleShop()">
-        <div class="slash-wrap"><div class="slash"></div><div class="slash"></div><div class="slash"></div></div>
+    <div class="landing">
+        <h1 class="hero-title">MRX<br><span class="neon">ELECTRONICS</span></h1>
+        
+        <div class="bio-grid">
+            <div class="bio-item">
+                <i class="fas fa-globe-europe" style="color:var(--neon-blue)"></i>
+                <h4>Import Europe & eBay</h4>
+                <p>PC, Laptops & Premium Consoles</p>
+            </div>
+            <div class="bio-item">
+                <i class="fas fa-microchip" style="color:var(--neon-violet)"></i>
+                <h4>Tech Curator</h4>
+                <p>100% Tested & Verified Hardware</p>
+            </div>
+            <div class="bio-item">
+                <i class="fas fa-shipping-fast" style="color:var(--royal-blue)"></i>
+                <h4>Livraison Maroc</h4>
+                <p>Casablanca, Marrakech, Tanger...</p>
+            </div>
+        </div>
+
+        <button class="cta-main" onclick="toggleShop()">OPEN INVENTORY</button>
     </div>
 
     <div class="sidebar" id="sidebar">
-        <aside class="filter-panel" id="filterPanel">
-            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()" style="background:var(--neon-violet)">APPLY FILTERS</button>
-            <span style="font-size:0.7rem; font-weight:800; color:var(--royal-blue); letter-spacing:2px">CATEGORIES</span>
-            <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px">
-                <button class="cat-btn active" onclick="setCategory('all', this)">All Stock</button>
-                <button class="cat-btn" onclick="setCategory('laptop', this)">Laptops</button>
-                <button class="cat-btn" onclick="setCategory('desktop', this)">Desktops</button>
-                <button class="cat-btn" onclick="setCategory('phone', this)">Phones</button>
+        <aside class="filter-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+                <h2 style="font-weight:800; font-size:1.5rem">FILTERS</h2>
+                <span onclick="toggleShop()" style="cursor:pointer; font-size:1.5rem; color:#888">&times;</span>
             </div>
-            <div style="margin-top:30px">
-                <span style="font-size:0.7rem; font-weight:800; color:var(--royal-blue); letter-spacing:2px">PRICE MAX: <span id="priceVal" style="color:white">10,000</span> DH</span>
-                <input type="range" id="priceRange" min="1000" max="15000" step="100" value="15000" style="width:100%; margin-top:15px" oninput="applyFilters()">
+            
+            <input type="text" id="mainSearch" class="tag" style="width:100%; color:white; padding:12px; background:#000; margin-bottom:15px" placeholder="Search (e.g. PS5, M1, RTX)..." onkeyup="applyFilters()">
+
+            <div class="filter-group" style="padding-bottom:20px; border-bottom:1px solid var(--border)">
+                <span style="font-size:0.6rem; letter-spacing:2px; color:var(--neon-blue)">PRICE MAX: <span id="priceLabel">15000</span> DH</span>
+                <input type="range" id="priceRange" min="500" max="15000" step="100" value="15000" style="width:100%; margin-top:10px" oninput="applyFilters()">
             </div>
+
+            <div class="filter-group" style="margin-top:20px">
+                <span style="font-size:0.6rem; letter-spacing:2px; color:var(--neon-blue)">CATEGORY</span>
+                <div class="tag-container" style="margin-top:10px">
+                    <div class="tag active" onclick="setCategory('all', this)">ALL</div>
+                    <div class="tag" onclick="setCategory('laptop', this)">LAPTOPS</div>
+                    <div class="tag" onclick="setCategory('desktop', this)">DESKTOP</div>
+                    <div class="tag" onclick="setCategory('phone', this)">PHONES</div>
+                    <div class="tag" onclick="setCategory('console', this)">CONSOLES</div>
+                </div>
+            </div>
+
+            <div id="pcLayer" class="dynamic-layer">
+                <div class="filter-group" style="margin-top:20px">
+                    <span style="font-size:0.6rem; letter-spacing:2px; color:var(--text-muted)">PC SPECS</span>
+                    <div class="tag-container" style="margin-top:10px">
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'i5')">Core i5</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'i7')">Core i7</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'M1')">Apple M1</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'RTX')">NVIDIA RTX</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="phoneLayer" class="dynamic-layer" style="display:none">
+                <div class="filter-group" style="margin-top:20px">
+                    <span style="font-size:0.6rem; letter-spacing:2px; color:var(--text-muted)">PHONE TIER</span>
+                    <div class="tag-container" style="margin-top:10px">
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Flagship')">Flagship</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Mid-Range')">Mid-Range</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Eco')">Eco Budget</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="consoleLayer" class="dynamic-layer" style="display:none">
+                <div class="filter-group" style="margin-top:20px">
+                    <span style="font-size:0.6rem; letter-spacing:2px; color:var(--text-muted)">CONSOLE TYPE</span>
+                    <div class="tag-container" style="margin-top:10px">
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'PlayStation')">PlayStation</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Xbox')">Xbox</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Nintendo')">Nintendo</div>
+                        <div class="tag" onclick="toggleTag(this, 'spec', 'Handheld')">Handheld PC</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:var(--neon-violet); cursor:pointer; font-size:0.7rem; font-weight:800; text-align:left">RESET ALL FILTERS</button>
         </aside>
 
         <section class="results-panel">
-            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()">⚙️ FILTER BY TYPE / PRICE</button>
-            <h2 style="font-size: 2rem; margin-bottom: 30px;">Premium <span class="neon">Inventory</span></h2>
             <div class="grid" id="productGrid"></div>
         </section>
     </div>
 
     <script>
-        const products = [
+        // --- 100% COMPLETE INVENTORY ---
+        const inventory = [
             // LAPTOPS
-            { name: "i5-1240P Laptop", cat: "laptop", price: 4250, specs: "Intel Core i5-1240P (12th Gen)<br>8GB RAM<br>512GB SSD Ultra Rapide" },
-            { name: "MacBook Air M1 13” (2020)", cat: "laptop", price: 5900, specs: "Puce Apple M1 (8 CPU / 7 GPU)<br>8GB RAM | 512GB SSD<br>Écran Retina True Tone<br>Batterie 12-15h (État Neuf)" },
-            { name: "Dell Precision 5570 (2022)", cat: "laptop", price: 6800, specs: "i7-12800H (14 Cores)<br>RTX A1000 4GB GDDR6<br>32GB RAM DDR5 | 1TB SSD<br>FHD+ 500 Nits 100% sRGB" },
-            { name: "ACER NITRO V15", cat: "laptop", price: 7800, specs: "i5-13420H (13th Gen)<br>32GB RAM Extreme<br>1TB SSD | RTX 3050Ti<br>15.6\" FHD IPS 165Hz" },
+            { name: "i5-1240P Laptop", cat: "laptop", price: 4250, spec: "i5", details: "Intel Core i5-1240P (12th Gen)<br>8GB RAM | 512GB SSD" },
+            { name: "MacBook Air M1 13”", cat: "laptop", price: 5900, spec: "M1", details: "Apple M1 Chip | 8GB RAM<br>512GB SSD | État Neuf" },
+            { name: "Dell Precision 5570", cat: "laptop", price: 6800, spec: "i7", details: "i7-12800H | RTX A1000<br>32GB DDR5 | 1TB SSD" },
+            { name: "Acer Nitro V15", cat: "laptop", price: 7800, spec: "i5", details: "i5-13420H | RTX 3050Ti<br>32GB RAM | 1TB SSD" },
             
-            // DESKTOPS
-            { name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, specs: "i5-9400KF Processor<br>RTX 3060 12GB GPU<br>16GB RAM | 512GB NVMe SSD" },
+            // DESKTOP
+            { name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, spec: "RTX", details: "i5-9400KF | RTX 3060 12GB<br>16GB RAM | 512GB NVMe" },
             
             // PHONES
-            { name: "iPhone 12", cat: "phone", price: 2600, specs: "64GB Storage<br>Premium Condition" },
-            { name: "iPhone 11 Pro Max", cat: "phone", price: 3100, specs: "256GB Storage<br>Excellent Condition" },
-            { name: "iPhone 14 Pro Max", cat: "phone", price: 9600, specs: "1TB Ultra Storage<br>Top Tier Condition" },
-            { name: "Samsung S20 FE", cat: "phone", price: 2000, specs: "128GB Storage<br>Smooth Performance" },
-            { name: "Samsung S22 Ultra", cat: "phone", price: 3600, specs: "Flagship Performance<br>Great Condition" }
+            { name: "iPhone 14 Pro Max", cat: "phone", price: 9600, spec: "Flagship", details: "1TB Ultra Storage<br>État Neuf" },
+            { name: "iPhone 12", cat: "phone", price: 2600, spec: "Mid-Range", details: "64GB Storage<br>Grade A" },
+            { name: "iPhone 11 Pro Max", cat: "phone", price: 3100, spec: "Mid-Range", details: "256GB Storage<br>Excellent Condition" },
+            { name: "Samsung S22 Ultra", cat: "phone", price: 3600, spec: "Flagship", details: "Dynamic AMOLED | S-Pen<br>12GB RAM" },
+            { name: "Samsung S20 FE", cat: "phone", price: 2000, spec: "Eco", details: "128GB Storage<br>120Hz Screen" },
+
+            // CONSOLES (NEW ADDITIONS)
+            { name: "PlayStation®5 SLIM", cat: "console", price: 5000, spec: "PlayStation", details: "Standard Édition | Presque Neuf<br>100% Verified" },
+            { name: "ASUS ROG ALLY", cat: "console", price: 5500, spec: "Handheld", details: "512GB SSD | Z1 Extreme<br>Windows 11 Gaming" },
+            { name: "Steam Deck", cat: "console", price: 4800, spec: "Handheld", details: "256GB NVMe SSD<br>Portable Gaming Powerhouse" },
+            { name: "Xbox Series S", cat: "console", price: 3000, spec: "Xbox", details: "Next-Gen Performance<br>Compact Design" },
+            { name: "Nintendo Switch", cat: "console", price: 1800, spec: "Nintendo", details: "Joy-Cons Included<br>Portable & Dock Mode" },
+            { name: "Xbox One S", cat: "console", price: 1400, spec: "Xbox", details: "1TB Storage<br>White Edition" }
         ];
 
-        let currentCat = 'all';
+        let activeCat = 'all';
+        let activeTags = [];
 
-        function toggleShop() {
-            document.getElementById('sidebar').classList.toggle('active');
+        function toggleShop() { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+            applyFilters();
         }
 
-        function toggleMobileFilter() {
-            document.getElementById('filterPanel').classList.toggle('mobile-show');
+        function setCategory(cat, el) {
+            // Highlight Button
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            activeCat = cat;
+            
+            // Logic to Show/Hide Layers
+            document.querySelectorAll('.dynamic-layer').forEach(l => l.style.display = 'none');
+            
+            if(cat === 'laptop' || cat === 'desktop') document.getElementById('pcLayer').style.display = 'block';
+            else if(cat === 'phone') document.getElementById('phoneLayer').style.display = 'block';
+            else if(cat === 'console') document.getElementById('consoleLayer').style.display = 'block';
+
+            applyFilters();
         }
 
-        function setCategory(cat, btn) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentCat = cat;
+        function toggleTag(el, type, val) {
+            el.classList.toggle('active');
+            if(activeTags.includes(val)) {
+                activeTags = activeTags.filter(t => t !== val);
+            } else {
+                activeTags.push(val);
+            }
             applyFilters();
         }
 
         function applyFilters() {
-            const maxPrice = document.getElementById('priceRange').value;
-            document.getElementById('priceVal').innerText = parseInt(maxPrice).toLocaleString();
-            
-            const filtered = products.filter(p => {
-                const matchesCat = currentCat === 'all' || p.cat === currentCat;
-                const matchesPrice = p.price <= maxPrice;
-                return matchesCat && matchesPrice;
+            const query = document.getElementById('mainSearch').value.toLowerCase();
+            const maxP = document.getElementById('priceRange').value;
+            document.getElementById('priceLabel').innerText = maxP;
+
+            const filtered = inventory.filter(p => {
+                const matchCat = activeCat === 'all' || p.cat === activeCat;
+                const matchPrice = p.price <= maxP;
+                const matchSearch = p.name.toLowerCase().includes(query) || p.details.toLowerCase().includes(query);
+                
+                // If tags are selected, product must match at least one (OR logic for tags)
+                // If no tags selected, match is true
+                const matchTags = activeTags.length === 0 || activeTags.some(tag => p.spec.includes(tag) || p.details.includes(tag));
+
+                return matchCat && matchPrice && matchSearch && matchTags;
             });
             render(filtered);
         }
 
         function render(items) {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = items.map(p => `
-                <div class="card">
+            grid.innerHTML = items.map((p, i) => `
+                <div class="card" style="animation-delay: ${i * 0.05}s">
+                    <span class="badge">${p.spec}</span>
                     <h3>${p.name}</h3>
-                    <div class="specs">${p.specs}</div>
-                    <div class="price">${p.price.toLocaleString()} <span style="font-size:0.8rem; color:var(--neon-blue)">DH</span></div>
-                    <a href="https://wa.me/212693672256?text=Salam MRX, I want to order the ${p.name.replace(/\"/g, '')}" class="buy-btn">WHATSAPP ORDER</a>
+                    <div class="specs">${p.details}</div>
+                    <div class="price">${p.price.toLocaleString()} DH</div>
+                    <a href="https://wa.me/212693672256?text=Salam MRX, I want to order: ${p.name}" class="cta-main" style="display:block; text-align:center; padding:12px; margin-top:0; font-size:0.8rem">ORDER NOW</a>
                 </div>
             `).join('');
         }
 
-        render(products);
+        // Init
+        render(inventory);
     </script>
 </body>
 </html>
