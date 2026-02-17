@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRX Electronics | Online Premium Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0d0d0f;
+            --royal-blue: #1c3faa;
+            --neon-blue: #00d4ff;
+            --neon-violet: #9d00ff;
+            --text: #ffffff;
+            --text-muted: #6b6b6b;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); overflow: hidden; }
+
+        /* --- 1. MINIMAL LANDING PAGE --- */
+        .landing {
+            height: 100vh; width: 100vw;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #0f101a 0%, #050505 100%);
+            text-align: center;
+        }
+        .hero-title { font-size: clamp(3rem, 12vw, 8rem); font-weight: 800; letter-spacing: -2px; line-height: 0.85; }
+        .neon { background: linear-gradient(to right, var(--neon-blue), var(--neon-violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tagline { color: var(--text-muted); letter-spacing: 10px; text-transform: uppercase; font-size: 0.8rem; margin-top: 20px; }
+
+        /* --- 2. THE TRIGGER (BOTTOM RIGHT) --- */
+        .shop-trigger {
+            position: fixed; bottom: 40px; right: 40px; z-index: 2000;
+            cursor: pointer; background: var(--royal-blue); padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(28, 63, 170, 0.4);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .shop-trigger:hover { transform: scale(1.1) rotate(5deg); background: var(--neon-blue); }
+        .slash-wrap { display: flex; flex-direction: column; gap: 6px; }
+        .slash { width: 30px; height: 3px; background: white; border-radius: 10px; transition: 0.4s; }
+
+        /* --- 3. THE HIDDEN SHOP SIDEBAR --- */
+        .sidebar {
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(30px);
+            z-index: 1500; transition: 0.7s cubic-bezier(0.85, 0, 0.15, 1);
+            display: grid; grid-template-columns: 350px 1fr;
+        }
+        .sidebar.active { right: 0; }
+
+        /* Filter Panel (Left) */
+        .filter-panel {
+            background: var(--panel); border-right: 1px solid var(--border);
+            padding: 60px 40px; display: flex; flex-direction: column; gap: 40px;
+        }
+        .filter-title { font-size: 0.7rem; font-weight: 800; color: var(--royal-blue); text-transform: uppercase; letter-spacing: 2px; }
+        
+        .search-box {
+            width: 100%; background: var(--bg); border: 1px solid var(--border);
+            padding: 12px; border-radius: 8px; color: white; outline: none;
+        }
+        .search-box:focus { border-color: var(--neon-blue); }
+
+        .price-range { display: flex; flex-direction: column; gap: 10px; }
+        .price-input { width: 100%; accent-color: var(--neon-blue); }
+
+        .cat-btn {
+            width: 100%; text-align: left; padding: 12px; background: transparent;
+            border: 1px solid var(--border); color: var(--text-muted);
+            border-radius: 8px; cursor: pointer; margin-bottom: 10px; transition: 0.3s;
+        }
+        .cat-btn.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
+
+        /* Results Panel (Right) */
+        .results-panel { padding: 60px 5%; overflow-y: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+
+        .card {
+            background: var(--panel); border: 1px solid var(--border); padding: 20px;
+            border-radius: 16px; transition: 0.3s; position: relative;
+        }
+        .card:hover { border-color: var(--neon-violet); transform: translateY(-5px); }
+        .card .badge { position: absolute; top: 15px; right: 15px; font-size: 0.6rem; color: var(--neon-blue); font-weight: 800; }
+        .card h3 { margin: 15px 0 5px 0; font-size: 1.1rem; }
+        .card .desc { color: var(--text-muted); font-size: 0.8rem; height: 40px; }
+        .card .price { font-size: 1.4rem; font-weight: 800; color: var(--text); margin: 15px 0; }
+        
+        .buy-btn {
+            display: block; width: 100%; text-align: center; padding: 12px;
+            background: #25d366; color: white; text-decoration: none;
+            border-radius: 8px; font-weight: 700; font-size: 0.8rem;
+        }
+
+        /* --- SOCIAL HUB (BOTTOM LEFT) --- */
+        .socials { position: fixed; bottom: 40px; left: 40px; z-index: 1001; display: flex; gap: 15px; }
+        .soc-link { 
+            width: 50px; height: 50px; background: var(--glass); border: 1px solid var(--border);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; color: white; font-weight: 800; font-size: 0.7rem; transition: 0.3s;
+        }
+        .soc-link:hover { border-color: var(--neon-blue); transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+
+        /* Animation States */
+        .active-icon .slash:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .active-icon .slash:nth-child(2) { opacity: 0; }
+        .active-icon .slash:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+        @media (max-width: 900px) {
+            .sidebar { grid-template-columns: 1fr; }
+            .filter-panel { display: none; } /* On mobile we'd usually use a popup, keeping simple for now */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="landing">
+        <h1 class="hero-title">MRX<br><span class="neon">STUDIO</span></h1>
+        <p class="tagline">100% Online Hardware Excellence</p>
+    </div>
+
+    <div class="socials">
+        <a href="#" class="soc-link">INSTA</a>
+        <a href="https://wa.me/212600000000" class="soc-link" style="color: #25d366;">WA</a>
+    </div>
+
+    <div class="shop-trigger" onclick="toggleShop()">
+        <div class="slash-wrap">
+            <div class="slash"></div>
+            <div class="slash"></div>
+            <div class="slash"></div>
+        </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <aside class="filter-panel">
+            <div>
+                <span class="filter-title">Search Tech</span>
+                <input type="text" class="search-box" id="searchInp" placeholder="Type to find..." onkeyup="applyFilters()">
+            </div>
+
+            <div>
+                <span class="filter-title">Category</span>
+                <div style="margin-top:15px">
+                    <button class="cat-btn active" onclick="setCategory('all', this)">All Hardware</button>
+                    <button class="cat-btn" onclick="setCategory('laptop', this)">Laptops</button>
+                    <button class="cat-btn" onclick="setCategory('parts', this)">PC Components</button>
+                    <button class="cat-btn" onclick="setCategory('acc', this)">Accessories</button>
+                </div>
+            </div>
+
+            <div class="price-range">
+                <span class="filter-title">Max Price: <span id="priceVal" style="color:var(--neon-blue)">50,000</span> MAD</span>
+                <input type="range" class="price-input" id="priceRange" min="500" max="60000" step="500" value="60000" oninput="applyFilters()">
+            </div>
+            
+            <p style="font-size: 0.7rem; color: var(--text-muted);">* Nationwide Shipping from our Digital Warehouse</p>
+        </aside>
+
+        <section class="results-panel">
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Digital <span class="neon">Inventory</span></h2>
+            <div class="grid" id="productGrid">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        const products = [
+            { name: "MSI Titan GT77", cat: "laptop", price: 54900, desc: "i9-14900HX | 128GB RAM | RTX 4090" },
+            { name: "MacBook Pro M3 Max", cat: "laptop", price: 38500, desc: "16-core CPU | 40-core GPU" },
+            { name: "RTX 5090 Founders", cat: "parts", price: 29000, desc: "Next-Gen Architecture | 32GB" },
+            { name: "Ryzen 9 7950X3D", cat: "parts", price: 8200, desc: "Ultimate Gaming Processor" },
+            { name: "AirPods Pro 2", cat: "acc", price: 2700, desc: "USB-C | Active Noise Cancelling" },
+            { name: "Logitech MX Master 3S", cat: "acc", price: 1200, desc: "Wireless Productivity Mouse" },
+            { name: "Samsung 990 Pro 2TB", cat: "parts", price: 1950, desc: "7450MB/s NVMe SSD" },
+            { name: "Razer BlackWidow V4", cat: "acc", price: 2400, desc: "Mechanical Gaming Keyboard" }
+        ];
+
+        let currentCat = 'all';
+
+        function toggleShop() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.shop-trigger').classList.toggle('active-icon');
+        }
+
+        function setCategory(cat, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCat = cat;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchVal = document.getElementById('searchInp').value.toLowerCase();
+            const maxPrice = document.getElementById('priceRange').value;
+            document.getElementById('priceVal').innerText = parseInt(maxPrice).toLocaleString();
+
+            const filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchVal);
+                const matchesCat = currentCat === 'all' || p.cat === currentCat;
+                const matchesPrice = p.price <= maxPrice;
+                return matchesSearch && matchesCat && matchesPrice;
+            });
+
+            render(filtered);
+        }
+
+        function render(items) {
+            const grid = document.getElementById('productGrid');
+            if(items.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted)">No items found in this range...</p>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(p => `
+                <div class="card">
+                    <span class="badge">SHIPPING READY</span>
+                    <h3>${p.name}</h3>
+                    <p class="desc">${p.desc}</p>
+                    <div class="price">${p.price.toLocaleString()} <span style="font-size:0.7rem; color:var(--text-muted)">MAD</span></div>
+                    <a href="https://wa.me/212600000000?text=I'm interested in the ${p.name}" class="buy-btn">WHATSAPP ORDER</a>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        render(products);
+    </script>
+</body>
+</html>
