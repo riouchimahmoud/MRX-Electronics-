@@ -56,6 +56,7 @@
         .filter-panel {
             background: var(--panel); border-right: 1px solid var(--border);
             padding: 60px 40px; display: flex; flex-direction: column; gap: 40px;
+            overflow-y: auto;
         }
         .filter-title { font-size: 0.7rem; font-weight: 800; color: var(--royal-blue); text-transform: uppercase; letter-spacing: 2px; }
         
@@ -76,8 +77,15 @@
         .cat-btn.active { background: var(--royal-blue); color: white; border-color: var(--neon-blue); }
 
         /* Results Panel (Right) */
-        .results-panel { padding: 60px 5%; overflow-y: auto; }
+        .results-panel { padding: 60px 5%; overflow-y: auto; position: relative; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+
+        /* Mobile Filter Toggle Button */
+        .mobile-filter-toggle {
+            display: none; width: 100%; padding: 15px; background: var(--royal-blue);
+            color: white; border: none; border-radius: 8px; font-weight: 700;
+            margin-bottom: 20px; cursor: pointer;
+        }
 
         .card {
             background: var(--panel); border: 1px solid var(--border); padding: 20px;
@@ -111,7 +119,13 @@
 
         @media (max-width: 900px) {
             .sidebar { grid-template-columns: 1fr; }
-            .filter-panel { display: none; } /* On mobile we'd usually use a popup, keeping simple for now */
+            .filter-panel { 
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                z-index: 10; display: none; /* Hidden by default on mobile */
+            }
+            .filter-panel.mobile-show { display: flex; }
+            .mobile-filter-toggle { display: block; }
+            .hero-title { font-size: 4rem; }
         }
     </style>
 </head>
@@ -123,8 +137,8 @@
     </div>
 
     <div class="socials">
-        <a href="#" class="soc-link">INSTA</a>
-        <a href="https://wa.me/212600000000" class="soc-link" style="color: #25d366;">WA</a>
+        <a href="https://www.instagram.com/mrx_electronics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="soc-link">INSTA</a>
+        <a href="https://wa.me/212693672256" target="_blank" class="soc-link" style="color: #25d366;">WA</a>
     </div>
 
     <div class="shop-trigger" onclick="toggleShop()">
@@ -136,7 +150,8 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <aside class="filter-panel">
+        <aside class="filter-panel" id="filterPanel">
+            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()" style="background: var(--neon-violet);">APPLY & CLOSE</button>
             <div>
                 <span class="filter-title">Search Tech</span>
                 <input type="text" class="search-box" id="searchInp" placeholder="Type to find..." onkeyup="applyFilters()">
@@ -153,17 +168,17 @@
             </div>
 
             <div class="price-range">
-                <span class="filter-title">Max Price: <span id="priceVal" style="color:var(--neon-blue)">50,000</span> MAD</span>
+                <span class="filter-title">Max Price: <span id="priceVal" style="color:var(--neon-blue)">60,000</span> MAD</span>
                 <input type="range" class="price-input" id="priceRange" min="500" max="60000" step="500" value="60000" oninput="applyFilters()">
             </div>
             
-            <p style="font-size: 0.7rem; color: var(--text-muted);">* Nationwide Shipping from our Digital Warehouse</p>
+            <p style="font-size: 0.7rem; color: var(--text-muted);">* Nationwide Shipping 🇲🇦</p>
         </aside>
 
         <section class="results-panel">
-            <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Digital <span class="neon">Inventory</span></h2>
-            <div class="grid" id="productGrid">
-                </div>
+            <button class="mobile-filter-toggle" onclick="toggleMobileFilter()">⚙️ FILTERS & SEARCH</button>
+            <h2 style="font-size: 2rem; margin-bottom: 30px;">Digital <span class="neon">Inventory</span></h2>
+            <div class="grid" id="productGrid"></div>
         </section>
     </div>
 
@@ -184,6 +199,10 @@
         function toggleShop() {
             document.getElementById('sidebar').classList.toggle('active');
             document.querySelector('.shop-trigger').classList.toggle('active-icon');
+        }
+
+        function toggleMobileFilter() {
+            document.getElementById('filterPanel').classList.toggle('mobile-show');
         }
 
         function setCategory(cat, btn) {
@@ -211,7 +230,7 @@
         function render(items) {
             const grid = document.getElementById('productGrid');
             if(items.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted)">No items found in this range...</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted)">No items found...</p>`;
                 return;
             }
 
@@ -221,12 +240,11 @@
                     <h3>${p.name}</h3>
                     <p class="desc">${p.desc}</p>
                     <div class="price">${p.price.toLocaleString()} <span style="font-size:0.7rem; color:var(--text-muted)">MAD</span></div>
-                    <a href="https://wa.me/212600000000?text=I'm interested in the ${p.name}" class="buy-btn">WHATSAPP ORDER</a>
+                    <a href="https://wa.me/212693672256?text=Salam MRX, I am interested in the ${p.name}" class="buy-btn">WHATSAPP ORDER</a>
                 </div>
             `).join('');
         }
 
-        // Initialize
         render(products);
     </script>
 </body>
