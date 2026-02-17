@@ -20,7 +20,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; width: 100%; }
 
-        /* --- INTENSE NEON TITLE --- */
         .neon-title {
             font-size: clamp(2.5rem, 10vw, 6rem);
             font-weight: 800;
@@ -42,7 +41,6 @@
             to { filter: brightness(1.2); transform: scale(1.01); }
         }
 
-        /* --- LAPTOP ANIMATION --- */
         .laptop-container {
             width: 240px; height: 160px; margin-bottom: 20px;
             display: flex; flex-direction: column; align-items: center;
@@ -59,7 +57,6 @@
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* --- LANDING PAGE --- */
         .landing { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
         
         .bio-grid {
@@ -73,22 +70,30 @@
         .bio-item h4 { font-size: 0.7rem; color: var(--neon-blue); letter-spacing: 2px; margin-bottom: 5px; }
         .bio-item p { font-size: 0.8rem; color: #888; }
 
-        /* --- SIDEBAR SHOP (MOBILE OPTIMIZED) --- */
         .sidebar { 
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%; 
             background: rgba(5,5,5,0.99); backdrop-filter: blur(50px); 
-            z-index: 1500; transition: 0.5s; display: grid; 
-            grid-template-columns: 360px 1fr; 
+            z-index: 1500; transition: 0.5s; display: block; 
         }
         .sidebar.active { right: 0; }
         
-        .filter-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
+        /* --- UPDATED FILTER OVERLAY --- */
+        .filter-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000;
+            display: none; flex-direction: column; padding: 40px; overflow-y: auto;
+        }
+        .filter-overlay.open { display: flex; }
+
+        .filter-group { margin-bottom: 25px; }
+        .filter-group h4 { font-size: 0.7rem; color: var(--neon-blue); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        
         .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .tag { padding: 10px 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; cursor: pointer; color: #888; background: #000; transition: 0.3s; }
         .tag.active { background: var(--royal-blue); color: #fff; border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+        .cat-count { font-size: 0.65rem; opacity: 0.6; margin-left: 5px; }
 
-        /* --- PRODUCT GRID --- */
-        .results-panel { padding: 40px 5%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .results-panel { padding: 80px 5% 40px; height: 100vh; overflow-y: auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 20px; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
         .card:hover { border-color: var(--neon-violet); transform: translateY(-5px); }
@@ -98,24 +103,14 @@
         .cta-main { background: var(--royal-blue); color: white; padding: 18px 45px; border-radius: 50px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; }
         .cta-main:hover { background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
 
+        .shop-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1600; }
+
         .socials { position: fixed; bottom: 30px; left: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
         .soc-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 1px solid var(--border); text-decoration: none; }
 
-        /* --- PHONE/TABLET FIXES --- */
-        @media (max-width: 900px) { 
-            .sidebar { grid-template-columns: 1fr; } 
-            .filter-panel { 
-                height: auto; 
-                padding: 20px; 
-                border-right: none; 
-                border-bottom: 1px solid var(--border);
-            } 
-            .results-panel { padding: 20px; }
-            .grid { grid-template-columns: 1fr; } /* Stack cards on very small screens */
-            .neon-title { font-size: 3rem; }
-            .socials { left: 15px; bottom: 15px; }
-            .soc-btn { width: 45px; height: 45px; }
-        }
+        input[type=range] { width: 100%; accent-color: var(--neon-blue); margin-top: 10px; }
+
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .neon-title { font-size: 3rem; } }
     </style>
 </head>
 <body>
@@ -140,23 +135,60 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <aside class="filter-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center">
-                <h2 style="font-weight:800; color:var(--neon-blue)">NAVIGATOR</h2>
-                <span onclick="toggleShop()" style="cursor:pointer; font-size:2.5rem; padding: 10px;">&times;</span>
+        <div class="shop-nav">
+            <button class="tag" style="color:var(--neon-blue); border-color:var(--neon-blue)" onclick="toggleFilters()">⚙️ FILTERS</button>
+            <span onclick="toggleShop()" style="cursor:pointer; font-size:2rem">&times;</span>
+        </div>
+
+        <div class="filter-overlay" id="filterMenu">
+            <div style="display:flex; justify-content:space-between; margin-bottom:30px">
+                <h2 style="color:var(--neon-blue)">FILTERS</h2>
+                <span onclick="toggleFilters()" style="cursor:pointer; font-size:2.5rem">&times;</span>
             </div>
+            
             <div class="filter-group">
-                <span style="font-size:0.6rem; color:var(--neon-blue); letter-spacing:2px">CATÉGORIES</span>
-                <div class="tag-container">
-                    <div class="tag active" onclick="setCategory('all', this)">ALL</div>
-                    <div class="tag" onclick="setCategory('laptop', this)">LAPTOPS</div>
-                    <div class="tag" onclick="setCategory('desktop', this)">DESKTOP</div>
-                    <div class="tag" onclick="setCategory('phone', this)">PHONES</div>
-                    <div class="tag" onclick="setCategory('console', this)">CONSOLES</div>
+                <h4>Price Max: <span id="priceVal" style="color:#fff">99999</span> DH</h4>
+                <input type="range" id="priceRange" min="1000" max="99999" step="100" value="99999" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-group">
+                <h4>Category</h4>
+                <div class="tag-container" id="catTags"></div>
+            </div>
+
+            <div id="dynamicFilters">
+                <div class="filter-group" id="pcSpecGroup" style="display:none">
+                    <h4>PC Specs / Components</h4>
+                    <div class="tag-container">
+                        <div class="tag" onclick="toggleSubTag('Core i5', this)">Core i5</div>
+                        <div class="tag" onclick="toggleSubTag('Core i7', this)">Core i7</div>
+                        <div class="tag" onclick="toggleSubTag('Apple M1', this)">Apple M1</div>
+                        <div class="tag" onclick="toggleSubTag('RTX', this)">NVIDIA RTX</div>
+                    </div>
+                </div>
+
+                <div class="filter-group" id="phoneGroup" style="display:none">
+                    <h4>Phone Tier</h4>
+                    <div class="tag-container">
+                        <div class="tag" onclick="toggleSubTag('Flagship', this)">Flagship</div>
+                        <div class="tag" onclick="toggleSubTag('Mid-Range', this)">Mid-Range</div>
+                        <div class="tag" onclick="toggleSubTag('Eco', this)">Economy</div>
+                    </div>
+                </div>
+
+                <div class="filter-group" id="consoleGroup" style="display:none">
+                    <h4>Console Generation</h4>
+                    <div class="tag-container">
+                        <div class="tag" onclick="toggleSubTag('Next-Gen', this)">Next-Gen (PS5/XSX)</div>
+                        <div class="tag" onclick="toggleSubTag('Old-Gen', this)">Old-Gen (PS4/One)</div>
+                        <div class="tag" onclick="toggleSubTag('Handheld', this)">Handheld/Nintendo</div>
+                    </div>
                 </div>
             </div>
-            <input type="text" id="mainSearch" class="tag" style="width:100%; color:white" placeholder="Search product..." onkeyup="applyFilters()">
-        </aside>
+
+            <button class="cta-main" style="margin-top:20px" onclick="toggleFilters()">APPLY & CLOSE</button>
+            <p onclick="resetAll()" style="color:var(--neon-violet); text-align:center; margin-top:20px; cursor:pointer; font-size:0.8rem; font-weight:800">RESET ALL FILTERS</p>
+        </div>
 
         <section class="results-panel">
             <div class="grid" id="productGrid"></div>
@@ -165,41 +197,85 @@
 
     <script>
         const inventory = [
-            { name: "PlayStation®5 SLIM Standard", cat: "console", price: 5000, details: "Standard édition | Presque Neuf 💯/💯 👌🏻" },
-            { name: "ASUS ROG ALLY 512Go", cat: "console", price: 5500, details: "Z1 Extreme | 512GB SSD | Handheld Power" },
-            { name: "Steam Deck 256 Go", cat: "console", price: 4800, details: "Valve SteamOS | 256GB NVMe SSD" },
-            { name: "Xbox Series S", cat: "console", price: 3000, details: "Next-Gen Digital | White Edition" },
-            { name: "Nintendo Switch", cat: "console", price: 1800, details: "V2 Neon Edition | Handheld Mode" },
-            { name: "XBOX® ONE S", cat: "console", price: 1400, details: "1TB Storage | 4K HDR Gaming" },
-            { name: "ACER NITRO V15", cat: "laptop", price: 7800, details: "Core i5-13420H (13th Gen)\n32GB RAM Extreme\n1TB SSD\nRTX 3050Ti Graphics\n15.6\" FHD IPS 165Hz" },
-            { name: "Dell Precision 5570 Station", cat: "laptop", price: 6800, details: "Core i7-12800H (14 Cores)\nRTX A1000 4GB GDDR6\n32 Go DDR5 RAM\n1 To SSD NVMe PCIe 4.0\n15.6” FHD+ 500 nits" },
-            { name: "MacBook Air M1 13”", cat: "laptop", price: 5900, details: "Apple M1 Chip (8-Core)\n8GB RAM | 512GB SSD\nRetina Display True Tone\nSpace Gray / Gold / Silver" },
-            { name: "Thinkpad L13 Gen 3", cat: "laptop", price: 4250, details: "Intel Core i5-1240P (12th Gen)\n8GB RAM | 512GB SSD\nUltra Fast Office & Pro" },
-            { name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, details: "Intel Core i5-9400KF\nNVIDIA RTX 3060 12GB\n16GB RAM\n512GB NVMe SSD" },
-            { name: "iPhone 14 Pro Max", cat: "phone", price: 9600, details: "1TB Storage | Deep Purple / Gold\nPremium State" },
-            { name: "iPhone 11 Pro Max", cat: "phone", price: 3100, details: "256GB Storage | Triple Camera\nLegendary Battery" },
-            { name: "iPhone 12", cat: "phone", price: 2600, details: "64GB Storage | 5G Ready\nSlim & Powerful" },
-            { name: "Samsung S22 Ultra", cat: "phone", price: 3600, details: "12GB RAM | 256GB\nDynamic AMOLED | S-Pen" },
-            { name: "Samsung S20 FE", cat: "phone", price: 2000, details: "128GB Storage | 120Hz Display\nCloud Navy / Mint" }
+            { name: "PlayStation®5 SLIM Standard", cat: "console", sub: "Next-Gen", price: 5000, details: "Standard édition | Presque Neuf 💯/💯 👌🏻" },
+            { name: "ASUS ROG ALLY 512Go", cat: "console", sub: "Handheld", price: 5500, details: "Z1 Extreme | 512GB SSD | Handheld Power" },
+            { name: "Steam Deck 256 Go", cat: "console", sub: "Handheld", price: 4800, details: "Valve SteamOS | 256GB NVMe SSD" },
+            { name: "Xbox Series S", cat: "console", sub: "Next-Gen", price: 3000, details: "Next-Gen Digital | White Edition" },
+            { name: "Nintendo Switch", cat: "console", sub: "Handheld", price: 1800, details: "V2 Neon Edition | Handheld Mode" },
+            { name: "XBOX® ONE S", cat: "console", sub: "Old-Gen", price: 1400, details: "1TB Storage | 4K HDR Gaming" },
+            { name: "ACER NITRO V15", cat: "laptop", sub: "Core i5 RTX", price: 7800, details: "Core i5-13420H (13th Gen)\n32GB RAM Extreme\n1TB SSD\nRTX 3050Ti Graphics" },
+            { name: "Dell Precision 5570 Station", cat: "laptop", sub: "Core i7", price: 6800, details: "Core i7-12800H (14 Cores)\nRTX A1000 4GB GDDR6\n32 Go DDR5 RAM" },
+            { name: "MacBook Air M1 13”", cat: "laptop", sub: "Apple M1", price: 5900, details: "Apple M1 Chip (8-Core)\n8GB RAM | 512GB SSD" },
+            { name: "Thinkpad L13 Gen 3", cat: "laptop", sub: "Core i5", price: 4250, details: "Intel Core i5-1240P (12th Gen)\n8GB RAM | 512GB SSD" },
+            { name: "PC Gamer RTX 3060", cat: "desktop", sub: "RTX", price: 6900, details: "Intel Core i5-9400KF\nNVIDIA RTX 3060 12GB" },
+            { name: "iPhone 14 Pro Max", cat: "phone", sub: "Flagship", price: 9600, details: "1TB Storage | Deep Purple | Premium State" },
+            { name: "iPhone 11 Pro Max", cat: "phone", sub: "Mid-Range", price: 3100, details: "256GB Storage | Triple Camera" },
+            { name: "iPhone 12", cat: "phone", sub: "Mid-Range", price: 2600, details: "64GB Storage | 5G Ready" },
+            { name: "Samsung S22 Ultra", cat: "phone", sub: "Flagship", price: 3600, details: "12GB RAM | 256GB | S-Pen" },
+            { name: "Samsung S20 FE", cat: "phone", sub: "Eco", price: 2000, details: "128GB Storage | 120Hz Display" }
         ];
 
         let activeCat = 'all';
+        let activeSubTags = [];
 
-        function toggleShop() { document.getElementById('sidebar').classList.toggle('active'); render(inventory); }
+        function toggleShop() { document.getElementById('sidebar').classList.toggle('active'); updateCatTags(); applyFilters(); }
+        function toggleFilters() { document.getElementById('filterMenu').classList.toggle('open'); }
+
+        function updateCatTags() {
+            const counts = inventory.reduce((acc, p) => { acc[p.cat] = (acc[p.cat] || 0) + 1; return acc; }, {});
+            const cats = ['all', 'laptop', 'desktop', 'phone', 'console'];
+            const container = document.getElementById('catTags');
+            container.innerHTML = cats.map(c => {
+                const count = c === 'all' ? inventory.length : (counts[c] || 0);
+                return `<div class="tag ${activeCat === c ? 'active' : ''}" onclick="setCategory('${c}', this)">
+                    ${c.toUpperCase()} <span class="cat-count">(${count})</span>
+                </div>`;
+            }).join('');
+        }
 
         function setCategory(cat, el) {
+            activeCat = cat;
+            activeSubTags = []; 
             document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            activeCat = cat;
+            
+            // Show/Hide sub-groups
+            document.getElementById('pcSpecGroup').style.display = (cat === 'laptop' || cat === 'desktop' || cat === 'all') ? 'block' : 'none';
+            document.getElementById('phoneGroup').style.display = (cat === 'phone' || cat === 'all') ? 'block' : 'none';
+            document.getElementById('consoleGroup').style.display = (cat === 'console' || cat === 'all') ? 'block' : 'none';
+            
+            applyFilters();
+        }
+
+        function toggleSubTag(tag, el) {
+            if (activeSubTags.includes(tag)) {
+                activeSubTags = activeSubTags.filter(t => t !== tag);
+                el.classList.remove('active');
+            } else {
+                activeSubTags.push(tag);
+                el.classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function resetAll() {
+            activeCat = 'all';
+            activeSubTags = [];
+            document.getElementById('priceRange').value = 99999;
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            updateCatTags();
             applyFilters();
         }
 
         function applyFilters() {
-            const query = document.getElementById('mainSearch').value.toLowerCase();
+            const maxPrice = document.getElementById('priceRange').value;
+            document.getElementById('priceVal').innerText = maxPrice;
+            
             const filtered = inventory.filter(p => {
                 const mCat = activeCat === 'all' || p.cat === activeCat;
-                const mSearch = p.name.toLowerCase().includes(query) || p.details.toLowerCase().includes(query);
-                return mCat && mSearch;
+                const mPrice = p.price <= maxPrice;
+                const mSub = activeSubTags.length === 0 || activeSubTags.some(tag => p.sub.includes(tag));
+                return mCat && mPrice && mSub;
             });
             render(filtered);
         }
@@ -209,7 +285,7 @@
             grid.innerHTML = items.map(p => `
                 <div class="card">
                     <div>
-                        <span style="font-size:0.6rem; color:var(--neon-blue); font-weight:800; letter-spacing:1px;">${p.cat.toUpperCase()}</span>
+                        <span style="font-size:0.6rem; color:var(--neon-blue); font-weight:800; letter-spacing:1px;">${p.cat.toUpperCase()} | ${p.sub}</span>
                         <h3 style="margin:10px 0; font-size:1.1rem;">${p.name}</h3>
                         <p class="specs">${p.details}</p>
                     </div>
