@@ -1,551 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MRX ELECTRONICS | Premium Tech</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg: #050505;
-            --panel: #0d0d0f;
-            --neon-blue: #00d4ff;
-            --neon-violet: #9d00ff;
-            --royal-blue: #1c3faa;
-            --text: #ffffff;
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #030303;
+            --surface: #111111;
+            --glass: rgba(15, 15, 20, 0.7);
+            --accent: #00d4ff;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(0, 212, 255, 0.15);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); overflow-x: hidden; line-height: 1.6; }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            width: 100%;
-        }
+        /* --- NAVIGATION --- */
+        .lang-nav { position: fixed; top: 20px; right: 20px; z-index: 5000; display: flex; gap: 10px; }
+        .lang-btn { background: var(--glass); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: 800; backdrop-filter: blur(10px); transition: 0.3s; }
+        .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-        .neon-title {
-            font-size: clamp(2.5rem, 10vw, 6rem);
-            font-weight: 800;
-            text-align: center;
-            line-height: 0.9;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 30px var(--neon-blue), 0 0 50px var(--neon-blue);
-            animation: neonPulse 2s infinite alternate;
-            margin-bottom: 20px;
-        }
+        .socials { position: fixed; bottom: 30px; left: 30px; z-index: 2500; display: flex; gap: 12px; }
+        .soc-btn { width: 45px; height: 45px; background: var(--glass); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #fff; border: 1px solid var(--border); text-decoration: none; transition: 0.3s; }
 
-        .violet-glow {
-            color: var(--neon-violet);
-            text-shadow: 0 0 10px var(--neon-violet), 0 0 30px var(--neon-violet), 0 0 50px var(--neon-violet);
-        }
+        /* --- CONTACT SUPPORT COMPONENT --- */
+        .support-wrapper { position: fixed; bottom: 30px; right: 30px; z-index: 6000; display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
+        .support-menu { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: none; flex-direction: column; gap: 5px; min-width: 200px; animation: slideUp 0.3s ease forwards; }
+        .support-menu.active { display: flex; }
+        .support-link { display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; color: #fff; font-size: 0.9rem; font-weight: 600; border-radius: 12px; transition: 0.2s; }
+        .support-link:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
+        .support-link i { font-size: 1.2rem; }
 
-        @keyframes neonPulse {
-            from {
-                filter: brightness(1);
-                transform: scale(1);
-            }
+        .support-btn { width: 60px; height: 60px; background: var(--accent); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 20px var(--glow); border: none; transition: 0.3s; animation: pulseGlow 2s infinite; }
+        .support-btn:hover { transform: scale(1.1) rotate(10deg); }
 
-            to {
-                filter: brightness(1.2);
-                transform: scale(1.01);
-            }
-        }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 212, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .laptop-container {
-            width: 240px;
-            height: 160px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: float 4s infinite ease-in-out;
-        }
+        /* --- VIEW MANAGEMENT --- */
+        .view { display: none; width: 100%; min-height: 100vh; }
+        .view.active { display: block; }
 
-        .screen {
-            width: 190px;
-            height: 115px;
-            border: 4px solid #222;
-            border-radius: 8px;
-            background: #000;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        /* --- 1. LANDING VIEW --- */
+        #landingView.active { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
+        .laptop-box { position: relative; width: 180px; height: 110px; margin-bottom: 30px; animation: float 5s infinite ease-in-out; }
+        .laptop-screen { width: 100%; height: 85%; background: #000; border: 2px solid #333; border-radius: 6px; }
+        .laptop-base { width: 110%; height: 6px; background: #222; margin-left: -5%; border-radius: 0 0 10px 10px; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        .screen-content {
-            font-size: 0.6rem;
-            color: var(--neon-blue);
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
+        .mrx-logo { font-size: clamp(3.5rem, 15vw, 8rem); font-weight: 800; letter-spacing: -3px; margin-bottom: 5px; cursor: pointer; background: linear-gradient(to bottom, #fff, #444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-toggle-btn { background: var(--glass); border: 1px solid var(--border); color: #aaa; padding: 12px 25px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; transition: 0.3s; }
+        .hero-search-wrap { width: 100%; max-width: 500px; display: none; margin-bottom: 30px; }
+        .hero-search-wrap.visible { display: block; animation: slideIn 0.4s ease; }
+        .hero-input { width: 100%; background: #111; border: 1px solid var(--accent); padding: 18px 30px; border-radius: 100px; color: #fff; font-size: 1rem; outline: none; box-shadow: 0 0 20px rgba(0,212,255,0.1); }
 
-        .base {
-            width: 230px;
-            height: 8px;
-            background: #333;
-            border-radius: 2px 2px 10px 10px;
-        }
+        .home-cats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+        .cat-pill { padding: 12px 22px; background: var(--glass); border: 1px solid var(--border); border-radius: 100px; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: #888; transition: 0.3s; }
+        .cat-pill:hover { border-color: var(--accent); color: #fff; transform: translateY(-3px); }
 
-        @keyframes float {
+        .bio-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; margin-top: 80px; }
+        .bio-card { background: var(--glass); padding: 35px; border-radius: 24px; border: 1px solid var(--border); text-align: left; }
+        .bio-card i { color: var(--accent); font-size: 1.8rem; margin-bottom: 20px; display: block; }
 
-            0%,
-            100% {
-                transform: translateY(0);
-            }
+        /* --- 2. STORE VIEW --- */
+        .store-header { position: sticky; top: 0; background: rgba(3,3,3,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .store-layout { display: flex; }
+        .sidebar { width: 300px; padding: 40px 30px; border-right: 1px solid var(--border); flex-shrink: 0; }
+        .main-grid-area { flex-grow: 1; padding: 40px 5%; }
+        
+        .cat-list { list-style: none; margin-bottom: 40px; }
+        .cat-list li { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--text-muted); transition: 0.2s; margin-bottom: 5px; font-weight: 600; }
+        .cat-list li.active { background: rgba(0,212,255,0.1); color: var(--accent); border-left: 3px solid var(--accent); }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 15px var(--glow); }
+        
+        .card-img { height: 200px; background: #151515; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #222; transition: 0.5s; overflow: hidden; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .card:hover .card-img { color: var(--accent); }
+        .badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; background: var(--accent); color: #000; z-index: 10; }
 
-            50% {
-                transform: translateY(-15px);
-            }
-        }
+        /* --- 3. PRODUCT DETAIL --- */
+        .product-container { max-width: 1200px; margin: 0 auto; padding: 120px 5% 60px; animation: fadeIn 0.6s ease; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .detail-img { background: var(--surface); border-radius: 30px; min-height: 450px; display: flex; align-items: center; justify-content: center; font-size: 10rem; border: 1px solid var(--border); overflow: hidden; }
+        .detail-img img { width: 100%; height: 100%; object-fit: cover; }
+        .price-big { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 20px 0; }
+        .whatsapp-btn { background: #25D366; color: #fff; padding: 22px 45px; border-radius: 100px; text-decoration: none; display: inline-flex; align-items: center; gap: 15px; font-weight: 800; font-size: 1.2rem; transition: 0.3s; }
 
-        .landing {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .bio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 40px;
-        }
-
-        .bio-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .bio-item h4 {
-            font-size: 0.7rem;
-            color: var(--neon-blue);
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .bio-item p {
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 5, 0.99);
-            backdrop-filter: blur(50px);
-            z-index: 1500;
-            transition: 0.5s;
-            display: block;
-        }
-
-        .sidebar.active {
-            right: 0;
-        }
-
-        .filter-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-            padding: 40px;
-            overflow-y: auto;
-        }
-
-        .filter-overlay.open {
-            display: flex;
-        }
-
-        .filter-group {
-            margin-bottom: 25px;
-        }
-
-        .filter-group h4 {
-            font-size: 0.7rem;
-            color: var(--neon-blue);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            padding: 10px 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            color: #888;
-            background: #000;
-            transition: 0.3s;
-        }
-
-        .tag.active {
-            background: var(--royal-blue);
-            color: #fff;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .cat-count {
-            font-size: 0.65rem;
-            opacity: 0.6;
-            margin-left: 5px;
-        }
-
-        .results-panel {
-            padding: 80px 5% 40px;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            padding: 25px;
-            border-radius: 20px;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card:hover {
-            border-color: var(--neon-violet);
-            transform: translateY(-5px);
-        }
-
-        .price {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #fff;
-            display: block;
-            margin: 15px 0;
-        }
-
-        .specs {
-            font-size: 0.8rem;
-            color: #888;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            white-space: pre-line;
-        }
-
-        .cta-main {
-            background: var(--royal-blue);
-            color: white;
-            padding: 18px 45px;
-            border-radius: 50px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .cta-main:hover {
-            background: var(--neon-blue);
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
-
-        .shop-nav {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1600;
-        }
-
-        .socials {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .soc-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            border: 1px solid var(--border);
-            text-decoration: none;
-        }
-
-        input[type=range] {
-            width: 100%;
-            accent-color: var(--neon-blue);
-            margin-top: 10px;
-        }
-
-        @media (max-width: 900px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .neon-title {
-                font-size: 3rem;
-            }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 900px) { .store-layout { flex-direction: column; } .sidebar { width: 100%; border-right: none; } .detail-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
-
 <body>
 
+    <div class="support-wrapper">
+        <div class="support-menu" id="supportMenu">
+            <a href="https://wa.me/212693672256" target="_blank" class="support-link">
+                <i class="fab fa-whatsapp" style="color:#25d366"></i> <span id="t-sup-wa">Chat with Us</span>
+            </a>
+            <a href="tel:+212693672256" class="support-link">
+                <i class="fas fa-phone-alt" style="color:var(--accent)"></i> <span id="t-sup-call">Call Support</span>
+            </a>
+        </div>
+        <button class="support-btn" onclick="toggleSupport()">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <div class="lang-nav">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
+    </div>
+
     <div class="socials">
-        <a href="https://www.instagram.com/mrx_electronics" target="_blank" class="soc-btn"><i
-                class="fab fa-instagram"></i></a>
-        <a href="https://wa.me/212693672256" target="_blank" class="soc-btn" style="color:#25d366"><i
-                class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/212693672256" target="_blank" class="soc-btn" style="color:#25d366"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://instagram.com/mrx_electronics" target="_blank" class="soc-btn"><i class="fab fa-instagram"></i></a>
     </div>
 
-    <div class="landing">
-        <div class="laptop-container">
-            <div class="screen">
-                <div class="screen-content">SYSTEM ONLINE</div>
-            </div>
-            <div class="base"></div>
+    <div id="landingView" class="view active">
+        <div class="laptop-box"><div class="laptop-screen"></div><div class="laptop-base"></div></div>
+        <h1 class="mrx-logo" onclick="goTo('landing')">MRX</h1>
+        <p id="t-hero-sub" style="color:var(--accent); font-weight:700; letter-spacing:5px; font-size:0.75rem; text-transform:uppercase; margin-bottom:30px;">Premium Electronics Morocco</p>
+
+        <button class="search-toggle-btn" onclick="toggleHeroSearch()">
+            <i class="fas fa-search"></i> <span id="t-quick-search">Quick Search</span>
+        </button>
+
+        <div class="hero-search-wrap" id="heroSearchWrap">
+            <input type="text" class="hero-input" id="heroInput" placeholder="Type what you're looking for..." onkeypress="if(event.key==='Enter') doHeroSearch()">
         </div>
-        <h1 class="neon-title">MRX<br><span class="violet-glow">ELECTRONICS</span></h1>
-        <div class="bio-grid">
-            <div class="bio-item">
-                <h4>💻 PREMIUM IMPORT</h4>
-                <p>eBay Selection & European Quality</p>
-            </div>
-            <div class="bio-item">
-                <h4>🎮 GAMING HUB</h4>
-                <p>Consoles, Handhelds & PC Gaming</p>
-            </div>
-            <div class="bio-item">
-                <h4>🚚 FAST DELIVERY</h4>
-                <p>Livraison Partout au Maroc 🇲🇦</p>
-            </div>
+
+        <div class="home-cats">
+            <div class="cat-pill" onclick="openStore('laptop')" data-key="c_laptop">Laptops</div>
+            <div class="cat-pill" onclick="openStore('desktop')" data-key="c_desktop">PC Bureau</div>
+            <div class="cat-pill" onclick="openStore('phone')" data-key="c_phone">Phones</div>
+            <div class="cat-pill" onclick="openStore('console')" data-key="c_console">Consoles</div>
+            <div class="cat-pill" onclick="openStore('accesorie')" data-key="c_accesorie">Accessories</div>
         </div>
-        <button class="cta-main" style="margin-top: 40px;" onclick="toggleShop()">SCAN INVENTORY</button>
+
+        <button class="btn-primary" style="background:#fff; color:#000; padding:18px 45px; border-radius:50px; font-weight:800; border:none; cursor:pointer;" onclick="openStore('all')" id="t-explore">EXPLORE FULL INVENTORY</button>
+
+        <div class="bio-section">
+            <div class="bio-card"><i class="fas fa-microchip"></i><h4 data-key="bio1H">PREMIUM IMPORT</h4><p data-key="bio1P">Curated tech from European and US markets.</p></div>
+            <div class="bio-card"><i class="fas fa-truck-fast"></i><h4 data-key="bio2H">FAST DELIVERY</h4><p data-key="bio2P">Shipping to all cities in Morocco.</p></div>
+            <div class="bio-card"><i class="fas fa-shield-halved"></i><h4 data-key="bio3H">QUALITY CHECK</h4><p data-key="bio3P">20-point system test on every device.</p></div>
+        </div>
     </div>
 
-    <div class="sidebar" id="sidebar">
-        <div class="shop-nav">
-            <button class="tag" style="color:var(--neon-blue); border-color:var(--neon-blue)"
-                onclick="toggleFilters()">⚙️ FILTERS</button>
-            <span onclick="toggleShop()" style="cursor:pointer; font-size:2rem">&times;</span>
+    <div id="storeView" class="view">
+        <div class="store-header">
+            <div style="font-weight:800; font-size:1.5rem; cursor:pointer;" onclick="goTo('landing')">MRX<span style="color:var(--accent)">.</span></div>
+            <div id="t-store-title" style="font-weight:700; color:var(--text-muted)">STORE</div>
         </div>
-
-        <div class="filter-overlay" id="filterMenu">
-            <div style="display:flex; justify-content:space-between; margin-bottom:30px">
-                <h2 style="color:var(--neon-blue)">FILTERS</h2>
-                <span onclick="toggleFilters()" style="cursor:pointer; font-size:2.5rem">&times;</span>
-            </div>
-
-            <div class="filter-group">
-                <h4>Price Max: <span id="priceVal" style="color:#fff">99999</span> DH</h4>
-                <input type="range" id="priceRange" min="100" max="99999" step="10" value="99999"
-                    oninput="applyFilters()">
-            </div>
-
-            <div class="filter-group">
-                <h4>Category</h4>
-                <div class="tag-container" id="catTags"></div>
-            </div>
-
-            <div id="dynamicFilters">
-                <div class="filter-group" id="pcSpecGroup" style="display:none">
-                    <h4>PC Specs / Components</h4>
-                    <div class="tag-container">
-                        <div class="tag" onclick="toggleSubTag('Core i5', this)">Core i5</div>
-                        <div class="tag" onclick="toggleSubTag('Core i7', this)">Core i7</div>
-                        <div class="tag" onclick="toggleSubTag('Apple M1', this)">Apple M1</div>
-                        <div class="tag" onclick="toggleSubTag('RTX', this)">NVIDIA RTX</div>
-                    </div>
-                </div>
-
-                <div class="filter-group" id="phoneGroup" style="display:none">
-                    <h4>Phone Tier</h4>
-                    <div class="tag-container">
-                        <div class="tag" onclick="toggleSubTag('Flagship', this)">Flagship</div>
-                        <div class="tag" onclick="toggleSubTag('Mid-Range', this)">Mid-Range</div>
-                        <div class="tag" onclick="toggleSubTag('Eco', this)">Economy</div>
-                    </div>
-                </div>
-
-                <div class="filter-group" id="consoleGroup" style="display:none">
-                    <h4>Console Generation</h4>
-                    <div class="tag-container">
-                        <div class="tag" onclick="toggleSubTag('Next-Gen', this)">Next-Gen (PS5/XSX)</div>
-                        <div class="tag" onclick="toggleSubTag('Old-Gen', this)">Old-Gen (PS4/One)</div>
-                        <div class="tag" onclick="toggleSubTag('Handheld', this)">Handheld/Nintendo</div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="cta-main" style="margin-top:20px" onclick="toggleFilters()">APPLY & CLOSE</button>
-            <p onclick="resetAll()"
-                style="color:var(--neon-violet); text-align:center; margin-top:20px; cursor:pointer; font-size:0.8rem; font-weight:800">
-                RESET ALL FILTERS</p>
+        <div class="store-layout">
+            <aside class="sidebar">
+                <div class="filter-label" id="t-f-search">Search</div>
+                <input type="text" class="hero-input" id="storeSearch" placeholder="Filter..." oninput="applyFilters()" style="margin-bottom:30px; padding:12px 20px;">
+                <div class="filter-label" id="t-f-cat">Categories</div>
+                <ul class="cat-list" id="catList"></ul>
+                <div class="filter-label" id="t-f-price">Price: <span id="priceVal" style="color:var(--accent)">45000</span> DH</div>
+                <input type="range" id="priceRange" min="100" max="45000" step="100" value="45000" oninput="applyFilters()" style="width:100%; accent-color:var(--accent);">
+            </aside>
+            <main class="main-grid-area">
+                <div class="grid" id="productGrid"></div>
+            </main>
         </div>
+    </div>
 
-        <section class="results-panel">
-            <div class="grid" id="productGrid"></div>
-        </section>
+    <div id="productView" class="view">
+        <div class="product-container">
+            <button onclick="window.history.back()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:700; margin-bottom:30px;"><i class="fas fa-arrow-left"></i> <span id="t-back">Back</span></button>
+            <div id="detailContent"></div>
+            <div style="margin-top:80px; border-top:1px solid var(--border); padding-top:40px;">
+                <h3 id="t-suggested" style="margin-bottom:30px;">Suggested Products</h3>
+                <div class="grid" id="suggestedGrid"></div>
+            </div>
+        </div>
     </div>
 
     <script>
+        const translations = {
+            en: {
+                heroSub: "Premium Electronics Morocco", quickSearch: "Quick Search", explore: "EXPLORE FULL INVENTORY",
+                bio1H: "PREMIUM IMPORT", bio1P: "Curated tech from European and US markets.",
+                bio2H: "FAST DELIVERY", bio2P: "Shipping to all cities in Morocco.",
+                bio3H: "QUALITY CHECK", bio3P: "20-point system test on every device.",
+                fSearch: "Search", fCat: "Categories", fPrice: "Price Limit", back: "Back to store", suggested: "Suggested for you",
+                buy: "Order on WhatsApp", supWA: "Chat with Us", supCall: "Call Support",
+                c_all: "All Products", c_laptop: "Laptops", c_phone: "Phones", c_console: "Consoles", c_desktop: "PC Bureau", c_accesorie: "Accessories"
+            },
+            fr: {
+                heroSub: "Électronique Premium Maroc", quickSearch: "Recherche Rapide", explore: "VOIR TOUT L'INVENTAIRE",
+                bio1H: "IMPORT PREMIUM", bio1P: "Produits sélectionnés d'Europe et des USA.",
+                bio2H: "LIVRAISON RAPIDE", bio2P: "Livraison partout au Maroc.",
+                bio3H: "QUALITÉ CHECK", bio3P: "Test rigoureux en 20 points.",
+                fSearch: "Recherche", fCat: "Catégories", fPrice: "Prix Max", back: "Retour", suggested: "Produits suggérés",
+                buy: "Commander sur WhatsApp", supWA: "Discuter avec nous", supCall: "Appeler le support",
+                c_all: "Tous les produits", c_laptop: "Ordinateurs", c_phone: "Téléphones", c_console: "Consoles", c_desktop: "PC Bureau", c_accesorie: "Accessoires"
+            }
+        };
+
         const inventory = [
-            { name: "Acer Go TWS wireless earphones", cat: "accesorie", sub: "Audio", price: 180, details: "Premium Wireless Sound | Long Battery Life\nCompact Design" },
-            { name: "PlayStation®5 SLIM Standard", cat: "console", sub: "Next-Gen", price: 5000, details: "Standard édition | Presque Neuf 💯/💯 👌🏻" },
-            { name: "ASUS ROG ALLY 512Go", cat: "console", sub: "Handheld", price: 5500, details: "Z1 Extreme | 512GB SSD | Handheld Power" },
-            { name: "Steam Deck 256 Go", cat: "console", sub: "Handheld", price: 4800, details: "Valve SteamOS | 256GB NVMe SSD" },
-            { name: "Xbox Series S", cat: "console", sub: "Next-Gen", price: 3000, details: "Next-Gen Digital | White Edition" },
-            { name: "Nintendo Switch", cat: "console", sub: "Handheld", price: 1800, details: "V2 Neon Edition | Handheld Mode" },
-            { name: "XBOX® ONE S", cat: "console", sub: "Old-Gen", price: 1400, details: "1TB Storage | 4K HDR Gaming" },
-            { name: "ACER NITRO V15", cat: "laptop", sub: "Core i5 RTX", price: 7800, details: "Core i5-13420H (13th Gen)\n32GB RAM Extreme\n1TB SSD\nRTX 3050Ti Graphics" },
-            { name: "Dell Precision 5570 Station", cat: "laptop", sub: "Core i7", price: 6800, details: "Core i7-12800H (14 Cores)\nRTX A1000 4GB GDDR6\n32 Go DDR5 RAM" },
-            { name: "MacBook Air M1 13”", cat: "laptop", sub: "Apple M1", price: 5900, details: "Apple M1 Chip (8-Core)\n8GB RAM | 512GB SSD" },
-            { name: "Thinkpad L13 Gen 3", cat: "laptop", sub: "Core i5", price: 4250, details: "Intel Core i5-1240P (12th Gen)\n8GB RAM | 512GB SSD" },
-            { name: "PC Gamer RTX 3060", cat: "desktop", sub: "RTX", price: 6900, details: "Intel Core i5-9400KF\nNVIDIA RTX 3060 12GB" },
-            { name: "iPhone 14 Pro Max", cat: "phone", sub: "Flagship", price: 9600, details: "1TB Storage | Deep Purple | Premium State" },
-            { name: "iPhone 11 Pro Max", cat: "phone", sub: "Mid-Range", price: 3100, details: "256GB Storage | Triple Camera" },
-            { name: "iPhone 12", cat: "phone", sub: "Mid-Range", price: 2600, details: "64GB Storage | 5G Ready" },
-            { name: "Samsung S22 Ultra", cat: "phone", sub: "Flagship", price: 3600, details: "12GB RAM | 256GB | S-Pen" },
-            { name: "Samsung S20 FE", cat: "phone", sub: "Eco", price: 2000, details: "128GB Storage | 120Hz Display" }
+            // --- NEW DESKTOP COMPONENTS ---
+            { id: 19, name: "ASUS ROG Astral LC RTX 5090", cat: "desktop", price: 44999, details: "32GB GDDR7 | Liquid Cooled | Ultimate Performance", icon: "fa-microchip", cond: "NEW", img: "image_996b76.jpg" },
+            { id: 20, name: "ZOTAC GAMING RTX 5080", cat: "desktop", price: 15999, details: "16GB GDDR7 | Solid Core OC | Triple Fan", icon: "fa-microchip", cond: "NEW", img: "image_996b76.jpg" },
+            { id: 21, name: "MSI RTX 5080 INSPIRE 3X OC", cat: "desktop", price: 13999, details: "16GB GDDR7 | Triple Fan | High Performance", icon: "fa-microchip", cond: "NEW", img: "image_996b76.jpg" },
+            { id: 22, name: "ASUS TUF Gaming RTX 5070 Ti", cat: "desktop", price: 13999, details: "16GB GDDR7 | Military Grade Durability", icon: "fa-microchip", cond: "NEW", img: "image_996b76.jpg" },
+            { id: 23, name: "ASUS PRIME RTX 5070 Ti", cat: "desktop", price: 13499, details: "16GB GDDR7 | Sleek Design | Powerful Cooling", icon: "fa-microchip", cond: "NEW", img: "image_996b76.jpg" },
+            { id: 24, name: "MSI SHADOW X2 RTX 5060", cat: "desktop", price: 4299, details: "8GB GDDR6 | Dual Fan | NEW | TRAY", icon: "fa-microchip", cond: "NEW", img: "image_99727d.png" },
+            { id: 25, name: "AMD RYZEN 5 3500X", cat: "desktop", price: 790, details: "6 Cores | 3.6-4.1GHz | AM4 | TRAY", icon: "fa-processor", cond: "NEW", img: "image_996b76.jpg" },
+            
+            // --- LAPTOPS ---
+            { id: 9, name: "ACER NITRO V15", cat: "laptop", price: 7800, details: "Core i5-13420H | 32GB RAM\n1TB SSD | RTX 3050Ti", icon: "fa-laptop", cond: "Brand New", img: "Gemini_Generated_Image_suyky6suyky6suyk.jpg" },
+            { id: 10, name: "Dell Precision 5570 Station", cat: "laptop", price: 6800, details: "Core i7-12800H | 32 Go RAM", icon: "fa-laptop", cond: "Pristine", img: "Gemini_Generated_Image_834uzc834uzc834u.jpg" },
+            { id: 11, name: "MacBook Air M1 13”", cat: "laptop", price: 5900, details: "Apple M1 Chip | 8GB RAM", icon: "fa-laptop", cond: "Like New", img: "Gemini_Generated_Image_2pvjvu2pvjvu2pvj.jpg" },
+            { id: 12, name: "Thinkpad L13 Gen 3", cat: "laptop", price: 4250, details: "Core i5-1240P | 8GB RAM", icon: "fa-laptop", cond: "A Grade", img: "Gemini_Generated_Image_4pu7jy4pu7jy4pu7.jpg" },
+            
+            // --- CONSOLES ---
+            { id: 3, name: "PlayStation®5 SLIM Standard", cat: "console", price: 5000, details: "Standard édition | Presque Neuf 💯/💯", icon: "fa-gamepad", cond: "Like New 10/10", img: "Gemini_Generated_Image_p1honup1honup1ho.jpg" },
+            { id: 4, name: "ASUS ROG ALLY 512Go", cat: "console", price: 5500, details: "Z1 Extreme | 512GB SSD", icon: "fa-gamepad", cond: "Like New", img: "Gemini_Generated_Image_ht1amzht1amzht1a.jpg" },
+            { id: 5, name: "Steam Deck 256 Go", cat: "console", price: 4800, details: "Valve SteamOS | 256GB SSD", icon: "fa-gamepad", cond: "Premium", img: "Gemini_Generated_Image_etikletikletikle.jpg" },
+            { id: 6, name: "Xbox Series S", cat: "console", price: 3000, details: "Next-Gen Digital | White Edition", icon: "fa-xbox", cond: "New", img: "" },
+            { id: 7, name: "Nintendo Switch", cat: "console", price: 1800, details: "V2 Neon Edition", icon: "fa-gamepad", cond: "9/10", img: "" },
+            { id: 8, name: "XBOX® ONE S", cat: "console", price: 1400, details: "1TB Storage | 4K HDR", icon: "fa-xbox", cond: "Good", img: "" },
+            
+            // --- PHONES ---
+            { id: 14, name: "iPhone 14 Pro Max", cat: "phone", price: 9600, details: "1TB Storage | Deep Purple", icon: "fa-mobile-screen", cond: "100% Battery", img: "" },
+            { id: 15, name: "iPhone 11 Pro Max", cat: "phone", price: 3100, details: "256GB Storage", icon: "fa-mobile-screen", cond: "Clean", img: "" },
+            { id: 16, name: "iPhone 12", cat: "phone", price: 2600, details: "64GB Storage", icon: "fa-mobile-screen", cond: "A+", img: "" },
+            { id: 17, name: "Samsung S22 Ultra", cat: "phone", price: 3600, details: "12GB RAM | 256GB | S-Pen", icon: "fa-mobile-screen", cond: "Pristine", img: "" },
+            { id: 18, name: "Samsung S20 FE", cat: "phone", price: 2000, details: "128GB Storage | 5G Ready", icon: "fa-mobile-screen", cond: "9/10", img: "" },
+            
+            // --- ACCESSORIES & OTHER ---
+            { id: 13, name: "PC Gamer RTX 3060", cat: "desktop", price: 6900, details: "Core i5-9400KF | RTX 3060 12GB", icon: "fa-desktop", cond: "New Build", img: "" },
+            { id: 1, name: "Redragon Griffin M607", cat: "accesorie", price: 200, details: "7200 DPI | RGB Backlit", icon: "fa-mouse", cond: "Brand New", img: "" },
+            { id: 2, name: "Acer Go TWS wireless", cat: "accesorie", price: 180, details: "Premium Wireless Sound", icon: "fa-headphones", cond: "Brand New", img: "" }
         ];
 
-        let activeCat = 'all';
-        let activeSubTags = [];
+        let currentLang = 'en';
+        let currentCat = 'all';
 
-        function toggleShop() { document.getElementById('sidebar').classList.toggle('active'); updateCatTags(); applyFilters(); }
-        function toggleFilters() { document.getElementById('filterMenu').classList.toggle('open'); }
+        function toggleSupport() { document.getElementById('supportMenu').classList.toggle('active'); }
 
-        function updateCatTags() {
-            const counts = inventory.reduce((acc, p) => { acc[p.cat] = (acc[p.cat] || 0) + 1; return acc; }, {});
-            const cats = ['all', 'laptop', 'desktop', 'phone', 'console', 'accesorie'];
-            const container = document.getElementById('catTags');
-            container.innerHTML = cats.map(c => {
-                const count = c === 'all' ? inventory.length : (counts[c] || 0);
-                return `<div class="tag ${activeCat === c ? 'active' : ''}" onclick="setCategory('${c}', this)">
-                    ${c.toUpperCase()} <span class="cat-count">(${count})</span>
-                </div>`;
-            }).join('');
+        function goTo(viewId, productId = null) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId + 'View').classList.add('active');
+            window.scrollTo(0,0);
+            if (viewId === 'product') renderDetail(productId);
+            const state = { view: viewId, id: productId };
+            if (window.location.hash !== '#' + viewId) history.pushState(state, '', '#' + viewId);
         }
 
-        function setCategory(cat, el) {
-            activeCat = cat;
-            activeSubTags = [];
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-
-            document.getElementById('pcSpecGroup').style.display = (cat === 'laptop' || cat === 'desktop' || cat === 'all') ? 'block' : 'none';
-            document.getElementById('phoneGroup').style.display = (cat === 'phone' || cat === 'all') ? 'block' : 'none';
-            document.getElementById('consoleGroup').style.display = (cat === 'console' || cat === 'all') ? 'block' : 'none';
-
-            applyFilters();
+        window.onpopstate = (e) => { if (e.state) goTo(e.state.view, e.state.id); else goTo('landing'); };
+        function toggleHeroSearch() { document.getElementById('heroSearchWrap').classList.toggle('visible'); document.getElementById('heroInput').focus(); }
+        function doHeroSearch() {
+            const val = document.getElementById('heroInput').value;
+            document.getElementById('storeSearch').value = val;
+            openStore('all');
         }
-
-        function toggleSubTag(tag, el) {
-            if (activeSubTags.includes(tag)) {
-                activeSubTags = activeSubTags.filter(t => t !== tag);
-                el.classList.remove('active');
-            } else {
-                activeSubTags.push(tag);
-                el.classList.add('active');
-            }
-            applyFilters();
-        }
-
-        function resetAll() {
-            activeCat = 'all';
-            activeSubTags = [];
-            document.getElementById('priceRange').value = 99999;
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-            updateCatTags();
-            applyFilters();
-        }
+        function openStore(cat) { currentCat = cat; applyFilters(); goTo('store'); }
 
         function applyFilters() {
-            const maxPrice = document.getElementById('priceRange').value;
-            document.getElementById('priceVal').innerText = maxPrice;
-
-            const filtered = inventory.filter(p => {
-                const mCat = activeCat === 'all' || p.cat === activeCat;
-                const mPrice = p.price <= maxPrice;
-                const mSub = activeSubTags.length === 0 || activeSubTags.some(tag => p.sub.includes(tag));
-                return mCat && mPrice && mSub;
-            });
-            render(filtered);
+            const query = document.getElementById('storeSearch').value.toLowerCase();
+            const price = document.getElementById('priceRange').value;
+            document.getElementById('priceVal').innerText = price;
+            const filtered = inventory.filter(p => (currentCat === 'all' || p.cat === currentCat) && p.name.toLowerCase().includes(query) && p.price <= price);
+            renderGrid(filtered, 'productGrid');
+            renderCats();
         }
 
-        function render(items) {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = items.map(p => `
-                <div class="card">
-                    <div>
-                        <span style="font-size:0.6rem; color:var(--neon-blue); font-weight:800; letter-spacing:1px;">${p.cat.toUpperCase()} | ${p.sub}</span>
-                        <h3 style="margin:10px 0; font-size:1.1rem;">${p.name}</h3>
-                        <p class="specs">${p.details}</p>
+        function renderGrid(items, containerId) {
+            const t = translations[currentLang];
+            document.getElementById(containerId).innerHTML = items.map(p => `
+                <div class="card" onclick="goTo('product', ${p.id})">
+                    <div class="badge">${p.cond}</div>
+                    <div class="card-img">
+                        ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<i class="fas ${p.icon}"></i>`}
                     </div>
-                    <div>
-                        <span class="price">${p.price.toLocaleString()} DH</span>
-                        <a href="https://wa.me/212693672256?text=Bonjour MRX, je suis intéressé par: ${p.name}" 
-                           class="cta-main" style="display:block; text-align:center; text-decoration:none; padding:12px; font-size:0.8rem">
-                           WHATSAPP ORDER
-                        </a>
+                    <div class="card-body" style="padding:15px">
+                        <div style="font-size:0.7rem; color:var(--accent); font-weight:800; text-transform:uppercase">${t['c_'+p.cat]}</div>
+                        <div style="font-weight:700; font-size:1.1rem; margin:5px 0; height:45px; overflow:hidden;">${p.name}</div>
+                        <div style="font-weight:800; font-size:1.4rem; color:#fff;">${p.price.toLocaleString()} DH</div>
                     </div>
                 </div>
             `).join('');
         }
-        render(inventory);
+
+        function renderCats() {
+            const cats = ['all', 'laptop', 'desktop', 'phone', 'console', 'accesorie'];
+            document.getElementById('catList').innerHTML = cats.map(c => `<li class="${currentCat===c?'active':''}" onclick="currentCat='${c}'; applyFilters();">${translations[currentLang]['c_'+c]}</li>`).join('');
+        }
+
+        function renderDetail(id) {
+            const p = inventory.find(i => i.id === id);
+            const t = translations[currentLang];
+            const waMsg = encodeURIComponent(`Hello MRX Electronics! 👋\n\nI am interested in buying this item:\n\n📦 Product: ${p.name}\n💰 Price: ${p.price.toLocaleString()} DH\n✨ Condition: ${p.cond}\n\nIs it still in stock?`);
+            document.getElementById('detailContent').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-img">${p.img ? `<img src="${p.img}">` : `<i class="fas ${p.icon}"></i>`}</div>
+                    <div>
+                        <div style="color:var(--accent); font-weight:800; text-transform:uppercase; letter-spacing:1px;">${t['c_'+p.cat]} | ${p.cond}</div>
+                        <h1 style="font-size:3.5rem; line-height:1.1; margin:15px 0; font-weight:800;">${p.name}</h1>
+                        <div class="price-big">${p.price.toLocaleString()} DH</div>
+                        <a href="https://wa.me/212693672256?text=${waMsg}" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> ${t.buy}</a>
+                        <div style="background:var(--surface); padding:25px; border-radius:20px; border:1px solid var(--border); margin:30px 0;">
+                            <h4 style="margin-bottom:10px; color:#fff;">Product Details:</h4>
+                            <p style="white-space:pre-line; color:#aaa; font-size:1.1rem;">${p.details}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const suggested = inventory.filter(i => i.cat === p.cat && i.id !== p.id).slice(0, 4);
+            renderGrid(suggested, 'suggestedGrid');
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+            const t = translations[lang];
+            document.getElementById('t-hero-sub').innerText = t.heroSub;
+            document.getElementById('t-quick-search').innerText = t.quickSearch;
+            document.getElementById('t-explore').innerText = t.explore;
+            document.getElementById('t-f-search').innerText = t.fSearch;
+            document.getElementById('t-f-cat').innerText = t.fCat;
+            document.getElementById('t-f-price').innerHTML = `${t.fPrice}: <span id="priceVal" style="color:var(--accent)">${document.getElementById('priceRange').value}</span> DH`;
+            document.getElementById('t-back').innerText = t.back;
+            document.getElementById('t-suggested').innerText = t.suggested;
+            document.getElementById('t-sup-wa').innerText = t.supWA;
+            document.getElementById('t-sup-call').innerText = t.supCall;
+            ['bio1H','bio1P','bio2H','bio2P','bio3H','bio3P','c_laptop','c_desktop','c_phone','c_console','c_accesorie'].forEach(k => {
+                if(document.querySelector(`[data-key="${k}"]`)) document.querySelector(`[data-key="${k}"]`).innerText = t[k];
+            });
+            applyFilters();
+        }
+
+        window.onload = () => { history.replaceState({view: 'landing'}, '', '#landing'); setLang('en'); };
     </script>
 </body>
-
 </html>
